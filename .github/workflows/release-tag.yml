@@ -1,0 +1,14 @@
+name: Release Tag
+
+on:
+  push:
+    branches:
+      - main
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    uses: pharmacist-75/infra-workflows/.github/workflows/rcw-release-tag.yml@v1
+    secrets: inherit
