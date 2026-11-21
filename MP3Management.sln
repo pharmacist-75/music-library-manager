@@ -1,13 +1,20 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 2013
-VisualStudioVersion = 12.0.30501.0
+# Visual Studio Version 18
+VisualStudioVersion = 18.11.12328.437 stable
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IdSharp.Common", "IdSharp.Common\IdSharp.Common.csproj", "{1C83FB63-E16E-4380-9DD0-26E1799C417D}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IdSharp.Tagging", "IdSharp.Tagging\IdSharp.Tagging.csproj", "{A4BC39D2-FB08-4DCE-B485-0F49D21B106D}"
 EndProject
 Project("{F184B08F-C81C-45F6-A57F-5ABD9991F28F}") = "MP3Management", "MP3Management\MP3Management.vbproj", "{15452491-B8F4-4CA5-AEF0-04E25CF43770}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{C30EC6F8-C83D-4BEC-A459-022C5ED7A93F}"
+	ProjectSection(SolutionItems) = preProject
+		.gitignore = .gitignore
+		CHANGELOG = CHANGELOG
+		README.md = README.md
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -30,5 +37,8 @@ Global
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {5F2774F6-6E1C-4293-A945-9E9EAAF6C9AC}
 	EndGlobalSection
 EndGlobal
