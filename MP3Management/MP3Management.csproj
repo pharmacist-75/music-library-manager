@@ -72,6 +72,12 @@
     <Import Include="System.Threading.Tasks" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="FileNameDialog.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="FileNameDialog.Designer.cs">
+      <DependentUpon>FileNameDialog.cs</DependentUpon>
+    </Compile>
     <Compile Include="frmPlaylist.Designer.cs">
       <DependentUpon>frmPlaylist.cs</DependentUpon>
     </Compile>
@@ -100,6 +106,9 @@
     <Compile Include="PublicFunctions.cs" />
   </ItemGroup>
   <ItemGroup>
+    <EmbeddedResource Include="FileNameDialog.resx">
+      <DependentUpon>FileNameDialog.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="frmPlaylist.resx">
       <DependentUpon>frmPlaylist.cs</DependentUpon>
     </EmbeddedResource>

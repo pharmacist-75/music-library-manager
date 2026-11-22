@@ -1,4 +1,5 @@
-﻿using System;
+﻿using MP3Management;
+using System;
 using System.Diagnostics;
 using System.Drawing;
 using System.IO;
@@ -42,12 +43,15 @@ public partial class frmPlaylist : Form
 
         if (cmbPlaylist.Text == "<newPlayList.m3u>")
         {
-            MessageBox.Show("Please enter a name for the new playlist.", "Playlist Name Required", MessageBoxButtons.OK, MessageBoxIcon.Information);
-            //playList = InputBox("Name of PlayList: ");
-            //if (!playList.ToLower().EndsWith(".m3u"))
-            //{
-            //    playList += ".m3u";
-            //}
+            FileNameDialog fileNameDialog = new FileNameDialog("newPlayList.m3u");
+            fileNameDialog.ShowDialog();
+
+            playList = fileNameDialog.FileName;
+
+            if (!playList.ToLower().EndsWith(".m3u"))
+            {
+                playList += ".m3u";
+            }
         }
         else
         {
