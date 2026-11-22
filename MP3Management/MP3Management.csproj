@@ -1,7 +1,7 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <OutputType>WinExe</OutputType>
-    <TargetFramework>net48</TargetFramework>
+    <TargetFramework>net10.0-windows</TargetFramework>
     <UseWindowsForms>true</UseWindowsForms>
     <StartupObject>MP3Management.Program</StartupObject>
     <RootNamespace>MP3Management</RootNamespace>
@@ -11,13 +11,14 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Reference Include="System.Configuration" />
-    <Reference Include="System.Deployment" />
-    <Reference Include="Microsoft.VisualBasic" />
     <ProjectReference Include="..\IdSharp.Common\IdSharp.Common.csproj" />
     <ProjectReference Include="..\IdSharp.Tagging\IdSharp.Tagging.csproj" />
   </ItemGroup>
-
+  
+  <PropertyGroup>
+    <NoWarn>$(NoWarn);CA1416</NoWarn>
+  </PropertyGroup>
+  
   <ItemGroup>
     <Compile Update="FileNameDialog.cs;frmPlaylist.cs;frmMaster.cs">
       <SubType>Form</SubType>
