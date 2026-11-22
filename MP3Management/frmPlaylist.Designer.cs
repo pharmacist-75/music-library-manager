@@ -1,223 +1,197 @@
-﻿<Global.Microsoft.VisualBasic.CompilerServices.DesignerGenerated()> _
-Partial Class frmPlaylist
-    Inherits System.Windows.Forms.Form
+﻿using System;
+using System.ComponentModel;
+using System.Drawing;
+using System.Windows.Forms;
 
-    'Form overrides dispose to clean up the component list.
-    <System.Diagnostics.DebuggerNonUserCode()> _
-    Protected Overrides Sub Dispose(ByVal disposing As Boolean)
-        Try
-            If disposing AndAlso components IsNot Nothing Then
-                components.Dispose()
-            End If
-        Finally
-            MyBase.Dispose(disposing)
-        End Try
-    End Sub
+public partial class frmPlaylist
+{
+    private IContainer components = null;
 
-    'Required by the Windows Form Designer
-    Private components As System.ComponentModel.IContainer
+    protected override void Dispose(bool disposing)
+    {
+        try
+        {
+            if (disposing && components != null)
+            {
+                components.Dispose();
+            }
+        }
+        finally
+        {
+            base.Dispose(disposing);
+        }
+    }
 
-    'NOTE: The following procedure is required by the Windows Form Designer
-    'It can be modified using the Windows Form Designer.  
-    'Do not modify it using the code editor.
-    <System.Diagnostics.DebuggerStepThrough()> _
-    Private Sub InitializeComponent()
-        Me.labPlaylist = New System.Windows.Forms.Label()
-        Me.cmbPlaylist = New System.Windows.Forms.ComboBox()
-        Me.dgvSongs = New System.Windows.Forms.DataGridView()
-        Me.colFileName = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.colArtist = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.colTitle = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.colAlbum = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.cmdOk = New System.Windows.Forms.Button()
-        Me.cmdCancel = New System.Windows.Forms.Button()
-        Me.chkMerge = New System.Windows.Forms.CheckBox()
-        Me.labFileNotFould = New System.Windows.Forms.Label()
-        Me.labDuplicatedEntry = New System.Windows.Forms.Label()
-        Me.labPreviouslySaved = New System.Windows.Forms.Label()
-        Me.labNewEntry = New System.Windows.Forms.Label()
-        Me.cmdValidatePlaylists = New System.Windows.Forms.Button()
-        CType(Me.dgvSongs, System.ComponentModel.ISupportInitialize).BeginInit()
-        Me.SuspendLayout()
-        '
-        'labPlaylist
-        '
-        Me.labPlaylist.AutoSize = True
-        Me.labPlaylist.Location = New System.Drawing.Point(12, 15)
-        Me.labPlaylist.Name = "labPlaylist"
-        Me.labPlaylist.Size = New System.Drawing.Size(39, 13)
-        Me.labPlaylist.TabIndex = 0
-        Me.labPlaylist.Text = "Playlist"
-        '
-        'cmbPlaylist
-        '
-        Me.cmbPlaylist.FormattingEnabled = True
-        Me.cmbPlaylist.Location = New System.Drawing.Point(98, 12)
-        Me.cmbPlaylist.Name = "cmbPlaylist"
-        Me.cmbPlaylist.Size = New System.Drawing.Size(235, 21)
-        Me.cmbPlaylist.Sorted = True
-        Me.cmbPlaylist.TabIndex = 1
-        '
-        'dgvSongs
-        '
-        Me.dgvSongs.AllowUserToAddRows = False
-        Me.dgvSongs.AllowUserToResizeRows = False
-        Me.dgvSongs.Anchor = CType((((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Bottom) _
-            Or System.Windows.Forms.AnchorStyles.Left) _
-            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.dgvSongs.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize
-        Me.dgvSongs.Columns.AddRange(New System.Windows.Forms.DataGridViewColumn() {Me.colFileName, Me.colArtist, Me.colTitle, Me.colAlbum})
-        Me.dgvSongs.Location = New System.Drawing.Point(12, 55)
-        Me.dgvSongs.Name = "dgvSongs"
-        Me.dgvSongs.Size = New System.Drawing.Size(1094, 303)
-        Me.dgvSongs.TabIndex = 2
-        '
-        'colFileName
-        '
-        Me.colFileName.HeaderText = "FileName"
-        Me.colFileName.Name = "colFileName"
-        Me.colFileName.Width = 300
-        '
-        'colArtist
-        '
-        Me.colArtist.HeaderText = "Artist"
-        Me.colArtist.Name = "colArtist"
-        Me.colArtist.Width = 200
-        '
-        'colTitle
-        '
-        Me.colTitle.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill
-        Me.colTitle.HeaderText = "Title"
-        Me.colTitle.Name = "colTitle"
-        '
-        'colAlbum
-        '
-        Me.colAlbum.HeaderText = "Album"
-        Me.colAlbum.Name = "colAlbum"
-        Me.colAlbum.Width = 200
-        '
-        'cmdOk
-        '
-        Me.cmdOk.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.cmdOk.Location = New System.Drawing.Point(1031, 10)
-        Me.cmdOk.Name = "cmdOk"
-        Me.cmdOk.Size = New System.Drawing.Size(75, 23)
-        Me.cmdOk.TabIndex = 3
-        Me.cmdOk.Text = "OK"
-        Me.cmdOk.UseVisualStyleBackColor = True
-        '
-        'cmdCancel
-        '
-        Me.cmdCancel.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.cmdCancel.DialogResult = System.Windows.Forms.DialogResult.Cancel
-        Me.cmdCancel.Location = New System.Drawing.Point(940, 10)
-        Me.cmdCancel.Name = "cmdCancel"
-        Me.cmdCancel.Size = New System.Drawing.Size(75, 23)
-        Me.cmdCancel.TabIndex = 4
-        Me.cmdCancel.Text = "Cancel"
-        Me.cmdCancel.UseVisualStyleBackColor = True
-        '
-        'chkMerge
-        '
-        Me.chkMerge.AutoSize = True
-        Me.chkMerge.Location = New System.Drawing.Point(339, 14)
-        Me.chkMerge.Name = "chkMerge"
-        Me.chkMerge.Size = New System.Drawing.Size(149, 17)
-        Me.chkMerge.TabIndex = 5
-        Me.chkMerge.Text = "merge with existing playlist"
-        Me.chkMerge.UseVisualStyleBackColor = True
-        '
-        'labFileNotFould
-        '
-        Me.labFileNotFould.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
-        Me.labFileNotFould.AutoSize = True
-        Me.labFileNotFould.ForeColor = System.Drawing.Color.LightGray
-        Me.labFileNotFould.Location = New System.Drawing.Point(356, 361)
-        Me.labFileNotFould.Name = "labFileNotFould"
-        Me.labFileNotFould.Size = New System.Drawing.Size(92, 13)
-        Me.labFileNotFould.TabIndex = 6
-        Me.labFileNotFould.Text = "MP3-File not fould"
-        '
-        'labDuplicatedEntry
-        '
-        Me.labDuplicatedEntry.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
-        Me.labDuplicatedEntry.AutoSize = True
-        Me.labDuplicatedEntry.ForeColor = System.Drawing.Color.Red
-        Me.labDuplicatedEntry.Location = New System.Drawing.Point(268, 361)
-        Me.labDuplicatedEntry.Name = "labDuplicatedEntry"
-        Me.labDuplicatedEntry.Size = New System.Drawing.Size(82, 13)
-        Me.labDuplicatedEntry.TabIndex = 7
-        Me.labDuplicatedEntry.Text = "duplicated entry"
-        '
-        'labPreviouslySaved
-        '
-        Me.labPreviouslySaved.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
-        Me.labPreviouslySaved.AutoSize = True
-        Me.labPreviouslySaved.ForeColor = System.Drawing.Color.Blue
-        Me.labPreviouslySaved.Location = New System.Drawing.Point(111, 361)
-        Me.labPreviouslySaved.Name = "labPreviouslySaved"
-        Me.labPreviouslySaved.Size = New System.Drawing.Size(151, 13)
-        Me.labPreviouslySaved.TabIndex = 8
-        Me.labPreviouslySaved.Text = "previously saved to this playlist"
-        '
-        'labNewEntry
-        '
-        Me.labNewEntry.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
-        Me.labNewEntry.AutoSize = True
-        Me.labNewEntry.ForeColor = System.Drawing.Color.Green
-        Me.labNewEntry.Location = New System.Drawing.Point(12, 361)
-        Me.labNewEntry.Name = "labNewEntry"
-        Me.labNewEntry.Size = New System.Drawing.Size(93, 13)
-        Me.labNewEntry.TabIndex = 9
-        Me.labNewEntry.Text = "New song to save"
-        '
-        'cmdValidatePlaylists
-        '
-        Me.cmdValidatePlaylists.Location = New System.Drawing.Point(640, 10)
-        Me.cmdValidatePlaylists.Name = "cmdValidatePlaylists"
-        Me.cmdValidatePlaylists.Size = New System.Drawing.Size(115, 23)
-        Me.cmdValidatePlaylists.TabIndex = 14
-        Me.cmdValidatePlaylists.Text = "Validate Playlists"
-        Me.cmdValidatePlaylists.UseVisualStyleBackColor = True
-        '
-        'frmPlaylist
-        '
-        Me.AcceptButton = Me.cmdOk
-        Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
-        Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
-        Me.CancelButton = Me.cmdCancel
-        Me.ClientSize = New System.Drawing.Size(1118, 392)
-        Me.Controls.Add(Me.cmdValidatePlaylists)
-        Me.Controls.Add(Me.labNewEntry)
-        Me.Controls.Add(Me.labPreviouslySaved)
-        Me.Controls.Add(Me.labDuplicatedEntry)
-        Me.Controls.Add(Me.labFileNotFould)
-        Me.Controls.Add(Me.chkMerge)
-        Me.Controls.Add(Me.cmdCancel)
-        Me.Controls.Add(Me.cmdOk)
-        Me.Controls.Add(Me.dgvSongs)
-        Me.Controls.Add(Me.cmbPlaylist)
-        Me.Controls.Add(Me.labPlaylist)
-        Me.Name = "frmPlaylist"
-        Me.Text = "Playlist"
-        CType(Me.dgvSongs, System.ComponentModel.ISupportInitialize).EndInit()
-        Me.ResumeLayout(False)
-        Me.PerformLayout()
+    private void InitializeComponent()
+    {
+        this.labPlaylist = new System.Windows.Forms.Label();
+        this.cmbPlaylist = new System.Windows.Forms.ComboBox();
+        this.dgvSongs = new System.Windows.Forms.DataGridView();
+        this.colFileName = new System.Windows.Forms.DataGridViewTextBoxColumn();
+        this.colArtist = new System.Windows.Forms.DataGridViewTextBoxColumn();
+        this.colTitle = new System.Windows.Forms.DataGridViewTextBoxColumn();
+        this.colAlbum = new System.Windows.Forms.DataGridViewTextBoxColumn();
+        this.cmdOk = new System.Windows.Forms.Button();
+        this.cmdCancel = new System.Windows.Forms.Button();
+        this.chkMerge = new System.Windows.Forms.CheckBox();
+        this.labFileNotFould = new System.Windows.Forms.Label();
+        this.labDuplicatedEntry = new System.Windows.Forms.Label();
+        this.labPreviouslySaved = new System.Windows.Forms.Label();
+        this.labNewEntry = new System.Windows.Forms.Label();
+        this.cmdValidatePlaylists = new System.Windows.Forms.Button();
+        ((ISupportInitialize)this.dgvSongs).BeginInit();
+        this.SuspendLayout();
+        // labPlaylist
+        this.labPlaylist.AutoSize = true;
+        this.labPlaylist.Location = new System.Drawing.Point(12, 15);
+        this.labPlaylist.Name = "labPlaylist";
+        this.labPlaylist.Size = new System.Drawing.Size(39, 13);
+        this.labPlaylist.TabIndex = 0;
+        this.labPlaylist.Text = "Playlist";
+        // cmbPlaylist
+        this.cmbPlaylist.FormattingEnabled = true;
+        this.cmbPlaylist.Location = new System.Drawing.Point(98, 12);
+        this.cmbPlaylist.Name = "cmbPlaylist";
+        this.cmbPlaylist.Size = new System.Drawing.Size(235, 21);
+        this.cmbPlaylist.Sorted = true;
+        this.cmbPlaylist.TabIndex = 1;
+        // dgvSongs
+        this.dgvSongs.AllowUserToAddRows = false;
+        this.dgvSongs.AllowUserToResizeRows = false;
+        this.dgvSongs.Anchor = (((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) | System.Windows.Forms.AnchorStyles.Left) | System.Windows.Forms.AnchorStyles.Right);
+        this.dgvSongs.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+        this.dgvSongs.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] { this.colFileName, this.colArtist, this.colTitle, this.colAlbum });
+        this.dgvSongs.Location = new System.Drawing.Point(12, 55);
+        this.dgvSongs.Name = "dgvSongs";
+        this.dgvSongs.Size = new System.Drawing.Size(1094, 303);
+        this.dgvSongs.TabIndex = 2;
+        // colFileName
+        this.colFileName.HeaderText = "FileName";
+        this.colFileName.Name = "colFileName";
+        this.colFileName.Width = 300;
+        // colArtist
+        this.colArtist.HeaderText = "Artist";
+        this.colArtist.Name = "colArtist";
+        this.colArtist.Width = 200;
+        // colTitle
+        this.colTitle.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
+        this.colTitle.HeaderText = "Title";
+        this.colTitle.Name = "colTitle";
+        // colAlbum
+        this.colAlbum.HeaderText = "Album";
+        this.colAlbum.Name = "colAlbum";
+        this.colAlbum.Width = 200;
+        // cmdOk
+        this.cmdOk.Anchor = (System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right);
+        this.cmdOk.Location = new System.Drawing.Point(1031, 10);
+        this.cmdOk.Name = "cmdOk";
+        this.cmdOk.Size = new System.Drawing.Size(75, 23);
+        this.cmdOk.TabIndex = 3;
+        this.cmdOk.Text = "OK";
+        this.cmdOk.UseVisualStyleBackColor = true;
+        // cmdCancel
+        this.cmdCancel.Anchor = (System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right);
+        this.cmdCancel.DialogResult = System.Windows.Forms.DialogResult.Cancel;
+        this.cmdCancel.Location = new System.Drawing.Point(940, 10);
+        this.cmdCancel.Name = "cmdCancel";
+        this.cmdCancel.Size = new System.Drawing.Size(75, 23);
+        this.cmdCancel.TabIndex = 4;
+        this.cmdCancel.Text = "Cancel";
+        this.cmdCancel.UseVisualStyleBackColor = true;
+        // chkMerge
+        this.chkMerge.AutoSize = true;
+        this.chkMerge.Location = new System.Drawing.Point(339, 14);
+        this.chkMerge.Name = "chkMerge";
+        this.chkMerge.Size = new System.Drawing.Size(149, 17);
+        this.chkMerge.TabIndex = 5;
+        this.chkMerge.Text = "merge with existing playlist";
+        this.chkMerge.UseVisualStyleBackColor = true;
+        // labFileNotFould
+        this.labFileNotFould.Anchor = (System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left);
+        this.labFileNotFould.AutoSize = true;
+        this.labFileNotFould.ForeColor = System.Drawing.Color.LightGray;
+        this.labFileNotFould.Location = new System.Drawing.Point(356, 361);
+        this.labFileNotFould.Name = "labFileNotFould";
+        this.labFileNotFould.Size = new System.Drawing.Size(92, 13);
+        this.labFileNotFould.TabIndex = 6;
+        this.labFileNotFould.Text = "MP3-File not fould";
+        // labDuplicatedEntry
+        this.labDuplicatedEntry.Anchor = (System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left);
+        this.labDuplicatedEntry.AutoSize = true;
+        this.labDuplicatedEntry.ForeColor = System.Drawing.Color.Red;
+        this.labDuplicatedEntry.Location = new System.Drawing.Point(268, 361);
+        this.labDuplicatedEntry.Name = "labDuplicatedEntry";
+        this.labDuplicatedEntry.Size = new System.Drawing.Size(82, 13);
+        this.labDuplicatedEntry.TabIndex = 7;
+        this.labDuplicatedEntry.Text = "duplicated entry";
+        // labPreviouslySaved
+        this.labPreviouslySaved.Anchor = (System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left);
+        this.labPreviouslySaved.AutoSize = true;
+        this.labPreviouslySaved.ForeColor = System.Drawing.Color.Blue;
+        this.labPreviouslySaved.Location = new System.Drawing.Point(111, 361);
+        this.labPreviouslySaved.Name = "labPreviouslySaved";
+        this.labPreviouslySaved.Size = new System.Drawing.Size(151, 13);
+        this.labPreviouslySaved.TabIndex = 8;
+        this.labPreviouslySaved.Text = "previously saved to this playlist";
+        // labNewEntry
+        this.labNewEntry.Anchor = (System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left);
+        this.labNewEntry.AutoSize = true;
+        this.labNewEntry.ForeColor = System.Drawing.Color.Green;
+        this.labNewEntry.Location = new System.Drawing.Point(12, 361);
+        this.labNewEntry.Name = "labNewEntry";
+        this.labNewEntry.Size = new System.Drawing.Size(93, 13);
+        this.labNewEntry.TabIndex = 9;
+        this.labNewEntry.Text = "New song to save";
+        // cmdValidatePlaylists
+        this.cmdValidatePlaylists.Location = new System.Drawing.Point(640, 10);
+        this.cmdValidatePlaylists.Name = "cmdValidatePlaylists";
+        this.cmdValidatePlaylists.Size = new System.Drawing.Size(115, 23);
+        this.cmdValidatePlaylists.TabIndex = 14;
+        this.cmdValidatePlaylists.Text = "Validate Playlists";
+        this.cmdValidatePlaylists.UseVisualStyleBackColor = true;
+        // frmPlaylist
+        this.AcceptButton = this.cmdOk;
+        this.AutoScaleDimensions = new System.Drawing.SizeF(6.0f, 13.0f);
+        this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+        this.CancelButton = this.cmdCancel;
+        this.ClientSize = new System.Drawing.Size(1118, 392);
+        this.Controls.Add(this.cmdValidatePlaylists);
+        this.Controls.Add(this.labNewEntry);
+        this.Controls.Add(this.labPreviouslySaved);
+        this.Controls.Add(this.labDuplicatedEntry);
+        this.Controls.Add(this.labFileNotFould);
+        this.Controls.Add(this.chkMerge);
+        this.Controls.Add(this.cmdCancel);
+        this.Controls.Add(this.cmdOk);
+        this.Controls.Add(this.dgvSongs);
+        this.Controls.Add(this.cmbPlaylist);
+        this.Controls.Add(this.labPlaylist);
+        this.Name = "frmPlaylist";
+        this.Text = "Playlist";
+        ((ISupportInitialize)this.dgvSongs).EndInit();
+        this.Load += new EventHandler(frmPlaylist_Load);
+        this.cmdCancel.Click += new EventHandler(cmdCancel_Click);
+        this.cmdOk.Click += new EventHandler(cmdOk_Click);
+        this.cmbPlaylist.SelectedIndexChanged += new EventHandler(cmbPlaylist_SelectedIndexChanged);
+        this.chkMerge.CheckedChanged += new EventHandler(chkMerge_CheckedChanged);
+        this.cmdValidatePlaylists.Click += new EventHandler(cmdValidatePlaylists_Click);
+        this.ResumeLayout(false);
+        this.PerformLayout();
+    }
 
-    End Sub
-    Friend WithEvents labPlaylist As System.Windows.Forms.Label
-    Friend WithEvents cmbPlaylist As System.Windows.Forms.ComboBox
-    Friend WithEvents dgvSongs As System.Windows.Forms.DataGridView
-    Friend WithEvents colFileName As System.Windows.Forms.DataGridViewTextBoxColumn
-    Friend WithEvents colArtist As System.Windows.Forms.DataGridViewTextBoxColumn
-    Friend WithEvents colTitle As System.Windows.Forms.DataGridViewTextBoxColumn
-    Friend WithEvents colAlbum As System.Windows.Forms.DataGridViewTextBoxColumn
-    Friend WithEvents cmdOk As System.Windows.Forms.Button
-    Friend WithEvents cmdCancel As System.Windows.Forms.Button
-    Friend WithEvents chkMerge As System.Windows.Forms.CheckBox
-    Friend WithEvents labFileNotFould As System.Windows.Forms.Label
-    Friend WithEvents labDuplicatedEntry As System.Windows.Forms.Label
-    Friend WithEvents labPreviouslySaved As System.Windows.Forms.Label
-    Friend WithEvents labNewEntry As System.Windows.Forms.Label
-    Friend WithEvents cmdValidatePlaylists As System.Windows.Forms.Button
-End Class
+    internal System.Windows.Forms.Label labPlaylist;
+    internal System.Windows.Forms.ComboBox cmbPlaylist;
+    internal System.Windows.Forms.DataGridView dgvSongs;
+    internal System.Windows.Forms.DataGridViewTextBoxColumn colFileName;
+    internal System.Windows.Forms.DataGridViewTextBoxColumn colArtist;
+    internal System.Windows.Forms.DataGridViewTextBoxColumn colTitle;
+    internal System.Windows.Forms.DataGridViewTextBoxColumn colAlbum;
+    internal System.Windows.Forms.Button cmdOk;
+    internal System.Windows.Forms.Button cmdCancel;
+    internal System.Windows.Forms.CheckBox chkMerge;
+    internal System.Windows.Forms.Label labFileNotFould;
+    internal System.Windows.Forms.Label labDuplicatedEntry;
+    internal System.Windows.Forms.Label labPreviouslySaved;
+    internal System.Windows.Forms.Label labNewEntry;
+    internal System.Windows.Forms.Button cmdValidatePlaylists;
+}

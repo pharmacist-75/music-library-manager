@@ -1,35 +1,17 @@
-﻿Imports System
-Imports System.Reflection
-Imports System.Runtime.InteropServices
+﻿using System.Reflection;
+using System.Runtime.InteropServices;
 
-' General Information about an assembly is controlled through the following 
-' set of attributes. Change these attribute values to modify the information
-' associated with an assembly.
+// General information about the assembly.
+[assembly: AssemblyTitle("ID3Updater")]
+[assembly: AssemblyDescription("")]
+[assembly: AssemblyCompany("GfK SE")]
+[assembly: AssemblyProduct("ID3Updater")]
+[assembly: AssemblyCopyright("Copyright © GfK SE 2015")]
+[assembly: AssemblyTrademark("")]
 
-' Review the values of the assembly attributes
+// The following GUID is for the typelib ID if the project is exposed to COM.
+[assembly: ComVisible(false)]
+[assembly: Guid("51a02d63-bdb3-4c4f-97b4-9ffedb1ef684")]
 
-<Assembly: AssemblyTitle("ID3Updater")> 
-<Assembly: AssemblyDescription("")> 
-<Assembly: AssemblyCompany("GfK SE")> 
-<Assembly: AssemblyProduct("ID3Updater")> 
-<Assembly: AssemblyCopyright("Copyright © GfK SE 2015")> 
-<Assembly: AssemblyTrademark("")> 
-
-<Assembly: ComVisible(False)>
-
-'The following GUID is for the ID of the typelib if this project is exposed to COM
-<Assembly: Guid("51a02d63-bdb3-4c4f-97b4-9ffedb1ef684")> 
-
-' Version information for an assembly consists of the following four values:
-'
-'      Major Version
-'      Minor Version 
-'      Build Number
-'      Revision
-'
-' You can specify all the values or you can default the Build and Revision Numbers 
-' by using the '*' as shown below:
-' <Assembly: AssemblyVersion("1.0.*")> 
-
-<Assembly: AssemblyVersion("1.0.0.0")> 
-<Assembly: AssemblyFileVersion("1.0.0.0")> 
+[assembly: AssemblyVersion("1.0.0.0")]
+[assembly: AssemblyFileVersion("1.0.0.0")]

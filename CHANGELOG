@@ -1,5 +1,9 @@
 Unreleased
 
+1.1.0 - 2026-11-22
+
+PR2 Refactor codebase from VB to C#
+
 1.0.1 - 2026-11-21
 
 PR1 Refactor project structure
