@@ -9,15 +9,14 @@
     <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
     <ProjectGuid>{15452491-B8F4-4CA5-AEF0-04E25CF43770}</ProjectGuid>
   </PropertyGroup>
-
-  <ItemGroup>
-    <ProjectReference Include="..\IdSharp.Common\IdSharp.Common.csproj" />
-    <ProjectReference Include="..\IdSharp.Tagging\IdSharp.Tagging.csproj" />
-  </ItemGroup>
   
   <PropertyGroup>
     <NoWarn>$(NoWarn);CA1416</NoWarn>
   </PropertyGroup>
+  
+  <ItemGroup>
+    <PackageReference Include="IdSharp.Tagging" Version="2.0.3" />
+  </ItemGroup>
   
   <ItemGroup>
     <Compile Update="FileNameDialog.cs;frmPlaylist.cs;frmMaster.cs">
