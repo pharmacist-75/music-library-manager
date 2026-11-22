@@ -21,24 +21,6 @@ public partial class frmMaster : Form
 
     private void Form1_Load(object sender, EventArgs e)
     {
-        // Dim files As FileInfo()
-        // Dim fi As FileInfo
-        // Dim parts() As String
-        // Dim newFileName As String
-        // files = New DirectoryInfo("I:\\").GetFiles("*Rock'n'roll Realschule*.mp3")
-        // For Each fi In files
-        //     parts = fi.Name.Split("-")
-        //     newFileName = parts(0).Trim() & " - " & parts(3).Trim().Replace(".mp3", " (Mtv Unplugged).mp3")
-        //     Debug.Print(fi.FullName.Replace(fi.Name, newFileName))
-        //     If fi.FullName.Replace(fi.Name, newFileName) <> fi.FullName Then
-        //         Try
-        //             fi.MoveTo(fi.FullName.Replace(fi.Name, newFileName))
-        //         Catch ex As Exception
-        //             Beep()
-        //         End Try
-        //     End If
-        // Next
-
         AllowDrop = true;
         txtDriveLetter.Text = Settings.Default.DriveLetter ?? Application.StartupPath.Substring(0, 2);
         DriveLetter = txtDriveLetter.Text;
@@ -141,7 +123,7 @@ public partial class frmMaster : Form
                     sw.Write(";");
                 }
                 sw.Write(";" + ListToString(id3.UnsynchronizedLyricsList, " "));
-                sw.Write(";"); // & id3.PaddingSize.ToString())
+                sw.Write(";");
                 sw.Write(";" + NNStr(id3.Title).Replace(Environment.NewLine, ""));
                 sw.Write(";" + NNStr(id3.Title).Replace(Environment.NewLine, ""));
                 sw.Write(";" + NNStr(id3.TrackNumber).Replace(Environment.NewLine, ""));
@@ -321,16 +303,10 @@ public partial class frmMaster : Form
                     }
                 }
             }
+
             fileNameArtist = "";
-            // If parts.Length > 2 Then
-            //     For i = 0 To parts.Length - 2
-            //         fileNameArtist += parts(i) & "-"
-            //     Next
-            //     fileNameArtist = fileNameArtist.Trim("-")
-            // Else
-            // fileNameArtist = parts(0).Trim()
             fileNameArtist = parts[parts.Length - 1].Trim();
-            // End If
+
             if (version == "")
             {
                 AddRowToGridview(ref dgvSongs, mp3File.FullName, Color.Red, selectedVersion);
@@ -349,7 +325,6 @@ public partial class frmMaster : Form
                     }
                     if (fileNameArtist.Trim().ToUpper() != tagArtist)
                     {
-                        // If fileNameArtist.Trim() <> tagArtist Then
                         AddRowToGridview(ref dgvSongs, mp3File.FullName, Color.Black, version);
                     }
                 }
