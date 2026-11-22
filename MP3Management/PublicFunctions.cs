@@ -64,13 +64,15 @@ internal static class PublicFunctions
 
     public static void AddRowToGridview(ref DataGridView gridView, string mp3File, Color foreColor, string priorityVersion)
     {
-        ID3v1Tag id3v1 = new ID3v1Tag();
-        ID3v2Tag id3v2 = new ID3v2Tag();
+        ID3v1Tag id3v1 = new();
+        ID3v2Tag id3v2 = new();
         DataGridViewRow row;
         DataGridViewCell[] cells = new DataGridViewCell[4];
 
-        cells[0] = new DataGridViewTextBoxCell();
-        cells[0].Value = mp3File;
+        cells[0] = new DataGridViewTextBoxCell
+        {
+            Value = mp3File
+        };
         cells[0].Style.ForeColor = foreColor;
 
         cells[1] = new DataGridViewTextBoxCell();
@@ -113,10 +115,12 @@ internal static class PublicFunctions
             }
             catch (Exception)
             {
-                id3v1 = new ID3v1Tag();
-                id3v1.Artist = id3v2.Artist;
-                id3v1.Title = id3v2.Title;
-                id3v1.Album = id3v2.Album;
+                id3v1 = new ID3v1Tag
+                {
+                    Artist = id3v2.Artist,
+                    Title = id3v2.Title,
+                    Album = id3v2.Album
+                };
                 id3v1.Save(mp3File);
 
                 cells[1].Value = id3v1.Artist;
@@ -137,10 +141,12 @@ internal static class PublicFunctions
             }
             catch (Exception)
             {
-                id3v2 = new ID3v2Tag();
-                id3v2.Artist = id3v1.Artist;
-                id3v2.Title = id3v1.Title;
-                id3v2.Album = id3v1.Album;
+                id3v2 = new ID3v2Tag
+                {
+                    Artist = id3v1.Artist,
+                    Title = id3v1.Title,
+                    Album = id3v1.Album
+                };
                 id3v2.Save(mp3File);
 
                 cells[1].Value = id3v2.Artist;

@@ -3,7 +3,7 @@ using System.ComponentModel;
 using System.Drawing;
 using System.Windows.Forms;
 
-public partial class frmPlaylist
+public partial class FrmPlaylist
 {
     private IContainer components = null;
 
@@ -169,12 +169,12 @@ public partial class frmPlaylist
         this.Name = "frmPlaylist";
         this.Text = "Playlist";
         ((ISupportInitialize)this.dgvSongs).EndInit();
-        this.Load += new EventHandler(frmPlaylist_Load);
-        this.cmdCancel.Click += new EventHandler(cmdCancel_Click);
-        this.cmdOk.Click += new EventHandler(cmdOk_Click);
-        this.cmbPlaylist.SelectedIndexChanged += new EventHandler(cmbPlaylist_SelectedIndexChanged);
-        this.chkMerge.CheckedChanged += new EventHandler(chkMerge_CheckedChanged);
-        this.cmdValidatePlaylists.Click += new EventHandler(cmdValidatePlaylists_Click);
+        this.Load += new EventHandler(FrmPlaylist_Load);
+        this.cmdCancel.Click += new EventHandler(CmdCancel_Click);
+        this.cmdOk.Click += new EventHandler(CmdOk_Click);
+        this.cmbPlaylist.SelectedIndexChanged += new EventHandler(CmbPlaylist_SelectedIndexChanged);
+        this.chkMerge.CheckedChanged += new EventHandler(ChkMerge_CheckedChanged);
+        this.cmdValidatePlaylists.Click += new EventHandler(CmdValidatePlaylists_Click);
         this.ResumeLayout(false);
         this.PerformLayout();
     }

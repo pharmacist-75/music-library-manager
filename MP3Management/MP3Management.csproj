@@ -26,7 +26,7 @@
       <DependentUpon>FileNameDialog.cs</DependentUpon>
     </Compile>
     <Compile Update="frmPlaylist.Designer.cs">
-      <DependentUpon>frmPlaylist.cs</DependentUpon>
+      <DependentUpon>FrmPlaylist.cs</DependentUpon>
     </Compile>
     <Compile Update="frmMaster.Designer.cs">
       <DependentUpon>frmMaster.cs</DependentUpon>

@@ -34,7 +34,7 @@ public partial class frmMaster : Form
     private void Form1_DragDrop(object sender, DragEventArgs e)
     {
         DroppedFiles = (string[])e.Data.GetData(DataFormats.FileDrop);
-        frmPlaylist playlist = new frmPlaylist();
+        FrmPlaylist playlist = new();
         playlist.Show();
     }
 
