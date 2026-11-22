@@ -1,22 +1,20 @@
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <TargetFramework>net48</TargetFramework>
+    <TargetFramework>net10.0-windows</TargetFramework>
+    <UseWindowsForms>true</UseWindowsForms>
     <RootNamespace>IdSharp.Tagging</RootNamespace>
     <AssemblyName>IdSharp.Tagging</AssemblyName>
     <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
     <ProjectGuid>{A4BC39D2-FB08-4DCE-B485-0F49D21B106D}</ProjectGuid>
     <SignAssembly>true</SignAssembly>
     <AssemblyOriginatorKeyFile>idsharp.tagging.snk</AssemblyOriginatorKeyFile>
-    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
   </PropertyGroup>
+  <ItemGroup>
+    <PackageReference Include="System.Drawing.Common" Version="10.0.15" />
+  </ItemGroup>
 
   <ItemGroup>
-    <Reference Include="System.Data" />
-    <Reference Include="System.Drawing" />
-    <Reference Include="System.Management" />
-    <Reference Include="System.Windows.Forms" />
-    <Reference Include="System.Xml" />
     <Reference Include="zlib.net">
       <HintPath>Libraries\zlib.net.dll</HintPath>
     </Reference>
