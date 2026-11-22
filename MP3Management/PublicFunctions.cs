@@ -1,137 +1,160 @@
-﻿Imports System.ComponentModel
-Imports IdSharp.Tagging.ID3v1
-Imports IdSharp.Tagging.ID3v2
-Imports System.IO
+﻿using IdSharp.Tagging.ID3v1;
+using IdSharp.Tagging.ID3v2;
+using IdSharp.Tagging.ID3v2.Frames;
+using System;
+using System.ComponentModel;
+using System.Diagnostics;
+using System.Drawing;
+using System.IO;
+using System.Windows.Forms;
 
-Module PublicFunctions
-    Public DriveLetter As String
-    Public PlaylistFolder As DirectoryInfo
-    Public DroppedFiles() As String
+internal static class PublicFunctions
+{
+    public static string DriveLetter;
+    public static DirectoryInfo PlaylistFolder;
+    public static string[] DroppedFiles;
 
-    Function NNInt(ByVal v As Object) As Integer
+    public static int NNInt(object v)
+    {
+        if (Convert.IsDBNull(v) || v.ToString() == "" || v == null)
+        {
+            return 0;
+        }
+        else
+        {
+            return Convert.ToInt32(v);
+        }
+    }
 
-        If IsDBNull(v) OrElse v.ToString = "" OrElse IsNothing(v) Then
-            Return 0
-        Else
-            Return CInt(v)
-        End If
+    public static string NNStr(object v)
+    {
+        if (Convert.IsDBNull(v) || v == null)
+        {
+            return "";
+        }
+        else
+        {
+            return Convert.ToString(v);
+        }
+    }
 
-    End Function
+    public static string ListToString(BindingList<IUnsynchronizedText> bl, string seperator)
+    {
+        string result = "";
 
-    Function NNStr(ByVal v As Object) As String
+        foreach (IUnsynchronizedText st in bl)
+        {
+            result += st.Text.ToString() + seperator;
+        }
 
-        If IsDBNull(v) OrElse IsNothing(v) Then
-            Return ""
-        Else
-            Return CStr(v)
-        End If
+        return result.TrimEnd(seperator.ToCharArray()).Replace(Environment.NewLine, "");
+    }
 
-    End Function
+    public static string ListToString(BindingList<IComments> bl, string seperator)
+    {
+        string result = "";
 
-    Function ListToString(ByVal bl As BindingList(Of Frames.IUnsynchronizedText), seperator As String) As String
-        Dim st As Frames.IUnsynchronizedText
-        Dim result As String = ""
+        foreach (IComments st in bl)
+        {
+            result += st.Value.ToString() + seperator;
+        }
 
-        For Each st In bl
-            result += st.Text.ToString() & seperator
-        Next
+        return result.TrimEnd(seperator.ToCharArray()).Replace(Environment.NewLine, "");
+    }
 
-        Return result.TrimEnd(seperator).Replace(Environment.NewLine, "")
+    public static void AddRowToGridview(ref DataGridView gridView, string mp3File, Color foreColor, string priorityVersion)
+    {
+        ID3v1Tag id3v1 = new ID3v1Tag();
+        ID3v2Tag id3v2 = new ID3v2Tag();
+        DataGridViewRow row;
+        DataGridViewCell[] cells = new DataGridViewCell[4];
 
-    End Function
+        cells[0] = new DataGridViewTextBoxCell();
+        cells[0].Value = mp3File;
+        cells[0].Style.ForeColor = foreColor;
 
-    Function ListToString(ByVal bl As BindingList(Of Frames.IComments), seperator As String) As String
-        Dim st As Frames.IComments
-        Dim result As String = ""
+        cells[1] = new DataGridViewTextBoxCell();
+        cells[1].Style.ForeColor = foreColor;
 
-        For Each st In bl
-            result += st.Value.ToString() & seperator
-        Next
+        cells[2] = new DataGridViewTextBoxCell();
+        cells[2].Style.ForeColor = foreColor;
 
-        Return result.TrimEnd(seperator).Replace(Environment.NewLine, "")
+        cells[3] = new DataGridViewTextBoxCell();
+        cells[3].Style.ForeColor = foreColor;
 
-    End Function
+        if (File.Exists(mp3File))
+        {
+            try
+            {
+                id3v1 = new ID3v1Tag(mp3File);
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine($"Error reading ID3v1 tag from file: {mp3File}: {ex.Message}");
+            }
 
-    Sub AddRowToGridview(ByRef gridView As DataGridView, ByVal mp3File As String, ByVal foreColor As Color, priorityVersion As String)
-        Dim id3v1 As New ID3v1Tag
-        Dim id3v2 As New ID3v2Tag
-        Dim row As DataGridViewRow
-        Dim cells(3) As DataGridViewCell
+            try
+            {
+                id3v2 = new ID3v2Tag(mp3File);
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine($"Error reading ID3v2 tag from file: {mp3File}: {ex.Message}");
+            }
+        }
 
-        cells(0) = New DataGridViewTextBoxCell()
-        cells(0).Value = mp3File
-        cells(0).Style.ForeColor = foreColor
+        if (priorityVersion == "V1")
+        {
+            try
+            {
+                cells[1].Value = id3v1.Artist;
+                cells[2].Value = id3v1.Title;
+                cells[3].Value = id3v1.Album;
+            }
+            catch (Exception)
+            {
+                id3v1 = new ID3v1Tag();
+                id3v1.Artist = id3v2.Artist;
+                id3v1.Title = id3v2.Title;
+                id3v1.Album = id3v2.Album;
+                id3v1.Save(mp3File);
 
-        cells(1) = New DataGridViewTextBoxCell()
-        cells(1).Style.ForeColor = foreColor
+                cells[1].Value = id3v1.Artist;
+                cells[2].Value = id3v1.Title;
+                cells[3].Value = id3v1.Album;
+                cells[1].Style.ForeColor = Color.Green;
+                cells[2].Style.ForeColor = Color.Green;
+                cells[3].Style.ForeColor = Color.Green;
+            }
+        }
+        else
+        {
+            try
+            {
+                cells[1].Value = id3v2.Artist;
+                cells[2].Value = id3v2.Title;
+                cells[3].Value = id3v2.Album;
+            }
+            catch (Exception)
+            {
+                id3v2 = new ID3v2Tag();
+                id3v2.Artist = id3v1.Artist;
+                id3v2.Title = id3v1.Title;
+                id3v2.Album = id3v1.Album;
+                id3v2.Save(mp3File);
 
-        cells(2) = New DataGridViewTextBoxCell()
-        cells(2).Style.ForeColor = foreColor
+                cells[1].Value = id3v2.Artist;
+                cells[2].Value = id3v2.Title;
+                cells[3].Value = id3v2.Album;
+                cells[1].Style.ForeColor = Color.Green;
+                cells[2].Style.ForeColor = Color.Green;
+                cells[3].Style.ForeColor = Color.Green;
+            }
+        }
 
-        cells(3) = New DataGridViewTextBoxCell()
-        cells(3).Style.ForeColor = foreColor
+        row = new DataGridViewRow();
+        row.Cells.AddRange(cells);
 
-        If File.Exists(mp3File) Then
-            Try
-                id3v1 = New ID3v1Tag(mp3File)
-            Catch ex As Exception
-                Beep()
-            End Try
-
-            Try
-                id3v2 = New ID3v2Tag(mp3File)
-            Catch ex As Exception
-                Beep()
-            End Try
-        End If
-
-        If priorityVersion = "V1" Then
-            Try
-                cells(1).Value = id3v1.Artist
-                cells(2).Value = id3v1.Title
-                cells(3).Value = id3v1.Album
-            Catch ex As Exception
-
-                id3v1 = New ID3v1Tag()
-                id3v1.Artist = id3v2.Artist
-                id3v1.Title = id3v2.Title
-                id3v1.Album = id3v2.Album
-                id3v1.Save(mp3File)
-
-                cells(1).Value = id3v1.Artist
-                cells(2).Value = id3v1.Title
-                cells(3).Value = id3v1.Album
-                cells(1).Style.ForeColor = Color.Green
-                cells(2).Style.ForeColor = Color.Green
-                cells(3).Style.ForeColor = Color.Green
-            End Try
-        Else
-            Try
-                cells(1).Value = id3v2.Artist
-                cells(2).Value = id3v2.Title
-                cells(3).Value = id3v2.Album
-            Catch ex As Exception
-
-                id3v2 = New ID3v2Tag()
-                id3v2.Artist = id3v1.Artist
-                id3v2.Title = id3v1.Title
-                id3v2.Album = id3v1.Album
-                id3v2.Save(mp3File)
-
-                cells(1).Value = id3v2.Artist
-                cells(2).Value = id3v2.Title
-                cells(3).Value = id3v2.Album
-                cells(1).Style.ForeColor = Color.Green
-                cells(2).Style.ForeColor = Color.Green
-                cells(3).Style.ForeColor = Color.Green
-            End Try
-        End If
-
-        row = New DataGridViewRow()
-        row.Cells.AddRange(cells)
-
-        gridView.Rows.Add(row)
-
-    End Sub
-
-End Module
+        gridView.Rows.Add(row);
+    }
+}

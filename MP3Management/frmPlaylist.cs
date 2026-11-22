@@ -1,144 +1,167 @@
-﻿Imports System.IO
-Imports System.Text
+﻿using System;
+using System.Diagnostics;
+using System.Drawing;
+using System.IO;
+using System.Linq;
+using System.Windows.Forms;
+using static PublicFunctions;
 
-Public Class frmPlaylist
+public partial class frmPlaylist : Form
+{
+    public frmPlaylist()
+    {
+        InitializeComponent();
+    }
 
-    Private Sub frmPlaylist_Load(sender As Object, e As EventArgs) Handles MyBase.Load
-        Dim availablePlayLists As FileInfo()
-        Dim file As String
+    private void frmPlaylist_Load(object sender, EventArgs e)
+    {
+        FileInfo[] availablePlayLists;
+        availablePlayLists = PlaylistFolder.GetFiles("*.m3u");
+        cmbPlaylist.Items.AddRange(availablePlayLists);
+        cmbPlaylist.Items.Add("<newPlayList.m3u>");
+        cmbPlaylist.SelectedText = "<newPlayList.m3u>";
+        chkMerge.Visible = false;
 
-        availablePlayLists = playlistFolder.GetFiles("*.m3u")
+        foreach (string file in DroppedFiles)
+        {
+            AddRowToGridview(ref dgvSongs, file, Color.Green, "V1");
+        }
+    }
 
-        cmbPlaylist.Items.AddRange(availablePlayLists)
-        cmbPlaylist.Items.Add("<newPlayList.m3u>")
+    private void cmdCancel_Click(object sender, EventArgs e)
+    {
+        Dispose();
+    }
 
-        cmbPlaylist.SelectedText = "<newPlayList.m3u>"
-        chkMerge.Visible = False
+    private void cmdOk_Click(object sender, EventArgs e)
+    {
+        string playList = "";
+        StreamWriter sw;
+        string mp3File;
+        bool skip;
 
-        For Each file In droppedFiles
-            AddRowToGridview(dgvSongs, file, Color.Green, "V1")
-        Next
+        if (cmbPlaylist.Text == "<newPlayList.m3u>")
+        {
+            MessageBox.Show("Please enter a name for the new playlist.", "Playlist Name Required", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            //playList = InputBox("Name of PlayList: ");
+            //if (!playList.ToLower().EndsWith(".m3u"))
+            //{
+            //    playList += ".m3u";
+            //}
+        }
+        else
+        {
+            playList = cmbPlaylist.Text;
+        }
 
-    End Sub
-    
-    Private Sub cmdCancel_Click(sender As Object, e As EventArgs) Handles cmdCancel.Click
+        if (playList != "")
+        {
+            sw = new StreamWriter(PlaylistFolder.FullName + playList, false);
+            foreach (DataGridViewRow row in dgvSongs.Rows)
+            {
+                if (chkMerge.Checked)
+                {
+                    skip = row.Cells[0].Style.ForeColor == Color.Red;
+                    skip = skip | (row.Cells[0].Style.ForeColor == Color.LightGray);
+                }
+                else
+                {
+                    skip = row.Cells[0].Style.ForeColor != Color.Green;
+                }
+                if (!skip)
+                {
+                    mp3File = ".." + row.Cells[0].Value.ToString().Substring(2);
+                    sw.WriteLine(mp3File);
+                }
+            }
+            sw.Close();
+        }
+        Dispose();
+    }
 
-        Me.Dispose()
+    private void cmbPlaylist_SelectedIndexChanged(object sender, EventArgs e)
+    {
+        chkMerge.Checked = false;
+        if (File.Exists(PlaylistFolder.FullName + cmbPlaylist.Text))
+        {
+            chkMerge.Checked = true;
+        }
+        chkMerge.Visible = cmbPlaylist.Text != "<newPlayList.m3u>";
+    }
 
-    End Sub
+    private void chkMerge_CheckedChanged(object sender, EventArgs e)
+    {
+        StreamReader sr;
+        string mp3File;
+        Color rowColor;
+        bool rowRemoved;
 
-    Private Sub cmdOk_Click(sender As Object, e As EventArgs) Handles cmdOk.Click
-        Dim playList As String
-        Dim sw As StreamWriter
-        Dim row As DataGridViewRow
-        Dim mp3File As String
-        Dim skip As Boolean
+        if (chkMerge.Checked == false)
+        {
+            do
+            {
+                rowRemoved = false;
+                foreach (DataGridViewRow row in dgvSongs.Rows)
+                {
+                    if (row.Cells[0].Style.ForeColor != Color.Green)
+                    {
+                        dgvSongs.Rows.Remove(row);
+                        rowRemoved = true;
+                        break;
+                    }
+                }
+            } while (rowRemoved);
+        }
+        else
+        {
+            sr = new StreamReader(PlaylistFolder.FullName + cmbPlaylist.Text);
+            while (sr.Peek() >= 0)
+            {
+                mp3File = sr.ReadLine();
+                mp3File = DriveLetter + mp3File.Substring(2);
+                if (File.Exists(mp3File))
+                {
+                    if (DroppedFiles.Contains(mp3File))
+                    {
+                        rowColor = Color.Red;
+                    }
+                    else
+                    {
+                        rowColor = Color.Blue;
+                    }
+                }
+                else
+                {
+                    rowColor = Color.LightGray;
+                }
+                AddRowToGridview(ref dgvSongs, mp3File, rowColor, "V1");
+            }
+            sr.Close();
+        }
+    }
 
-        If cmbPlaylist.Text = "<newPlayList.m3u>" Then
-            playList = InputBox("Name of PlayList: ")
-            If Not playList.ToLower().EndsWith(".m3u") Then
-                playList += ".m3u"
-            End If
-        Else
-            playList = cmbPlaylist.Text
-        End If
+    private void cmdValidatePlaylists_Click(object sender, EventArgs e)
+    {
+        FileInfo[] availablePlayLists;
+        StreamReader sr;
+        FileInfo mp3File;
+        string fileName;
 
-        If playList <> "" Then
-            sw = New StreamWriter(PlaylistFolder.FullName & playList, False)
-            For Each row In dgvSongs.Rows
-                If chkMerge.Checked Then
-                    skip = (row.Cells(0).Style.ForeColor = Color.Red)
-                    skip = skip Or (row.Cells(0).Style.ForeColor = Color.LightGray)
-                Else
-                    skip = (row.Cells(0).Style.ForeColor <> Color.Green)
-                End If
-                If Not skip Then
-                    mp3File = ".." & row.Cells(0).Value.Substring(2)
-                    sw.WriteLine(mp3File)
-                End If
-            Next
-            sw.Close()
-        End If
-
-        Me.Dispose()
-
-    End Sub
-
-    Private Sub cmbPlaylist_SelectedIndexChanged(sender As Object, e As EventArgs) Handles cmbPlaylist.SelectedIndexChanged
-
-        chkMerge.Checked = False
-        If File.Exists(playlistFolder.FullName & cmbPlaylist.Text) Then
-            chkMerge.Checked = True
-        End If
-
-        chkMerge.Visible = (cmbPlaylist.Text <> "<newPlayList.m3u>")
-        
-    End Sub
-
-    Private Sub chkMerge_CheckedChanged(sender As Object, e As EventArgs) Handles chkMerge.CheckedChanged
-        Dim sr As StreamReader
-        Dim mp3File As String
-        Dim rowColor As Color
-        Dim row As DataGridViewRow
-        Dim rowRemoved As Boolean
-
-        If chkMerge.Checked = False Then
-            Do
-                rowRemoved = False
-                For Each row In dgvSongs.Rows
-                    If row.Cells(0).Style.ForeColor <> Color.Green Then
-                        dgvSongs.Rows.Remove(row)
-                        rowRemoved = True
-                        Exit For
-                    End If
-                Next
-            Loop While rowRemoved
-        Else
-            sr = New StreamReader(PlaylistFolder.FullName & cmbPlaylist.Text)
-            While sr.Peek() >= 0
-                mp3File = sr.ReadLine()
-
-                mp3File = DriveLetter & mp3File.Substring(2)
-
-                If File.Exists(mp3File) Then
-                    If DroppedFiles.Contains(mp3File) Then
-                        rowColor = Color.Red
-                    Else
-                        rowColor = Color.Blue
-                    End If
-                Else
-                    rowColor = Color.LightGray
-                End If
-                AddRowToGridview(dgvSongs, mp3File, rowColor, "V1")
-            End While
-            sr.Close()
-        End If
-
-    End Sub
-
-    Private Sub cmdValidatePlaylists_Click(sender As Object, e As EventArgs) Handles cmdValidatePlaylists.Click
-        Dim availablePlayLists As FileInfo()
-        Dim playList As FileInfo
-        Dim sr As StreamReader
-        Dim mp3File As FileInfo
-        Dim fileName As String
-
-        availablePlayLists = PlaylistFolder.GetFiles("*.m3u")
-
-        For Each playList In availablePlayLists
-            sr = New StreamReader(playList.FullName)
-            While sr.Peek() >= 0
-                fileName = sr.ReadLine().Replace("..\", DriveLetter & "\")
-                mp3File = New FileInfo(fileName)
-                If Not mp3File.Exists Then
-                    Debug.Print(playList.Name & " missing file " & mp3File.FullName)
-                End If
-            End While
-            sr.Close()
-        Next
-
-        Debug.Print("finished.")
-
-    End Sub
-
-End Class
+        availablePlayLists = PlaylistFolder.GetFiles("*.m3u");
+        foreach (FileInfo playList in availablePlayLists)
+        {
+            sr = new StreamReader(playList.FullName);
+            while (sr.Peek() >= 0)
+            {
+                fileName = sr.ReadLine().Replace("..\\", DriveLetter + "\\");
+                mp3File = new FileInfo(fileName);
+                if (!mp3File.Exists)
+                {
+                    Debug.Print(playList.Name + " missing file " + mp3File.FullName);
+                }
+            }
+            sr.Close();
+        }
+        Debug.Print("finished.");
+    }
+}
