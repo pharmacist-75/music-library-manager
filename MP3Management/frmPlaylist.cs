@@ -7,14 +7,14 @@ using System.Linq;
 using System.Windows.Forms;
 using static PublicFunctions;
 
-public partial class frmPlaylist : Form
+public partial class FrmPlaylist : Form
 {
-    public frmPlaylist()
+    public FrmPlaylist()
     {
         InitializeComponent();
     }
 
-    private void frmPlaylist_Load(object sender, EventArgs e)
+    private void FrmPlaylist_Load(object sender, EventArgs e)
     {
         FileInfo[] availablePlayLists;
         availablePlayLists = PlaylistFolder.GetFiles("*.m3u");
@@ -29,21 +29,21 @@ public partial class frmPlaylist : Form
         }
     }
 
-    private void cmdCancel_Click(object sender, EventArgs e)
+    private void CmdCancel_Click(object sender, EventArgs e)
     {
         Dispose();
     }
 
-    private void cmdOk_Click(object sender, EventArgs e)
+    private void CmdOk_Click(object sender, EventArgs e)
     {
-        string playList = "";
+        string playList;
         StreamWriter sw;
         string mp3File;
         bool skip;
 
         if (cmbPlaylist.Text == "<newPlayList.m3u>")
         {
-            FileNameDialog fileNameDialog = new FileNameDialog("newPlayList.m3u");
+            FileNameDialog fileNameDialog = new("newPlayList.m3u");
             fileNameDialog.ShowDialog();
 
             playList = fileNameDialog.FileName;
@@ -66,7 +66,7 @@ public partial class frmPlaylist : Form
                 if (chkMerge.Checked)
                 {
                     skip = row.Cells[0].Style.ForeColor == Color.Red;
-                    skip = skip | (row.Cells[0].Style.ForeColor == Color.LightGray);
+                    skip |= (row.Cells[0].Style.ForeColor == Color.LightGray);
                 }
                 else
                 {
@@ -74,7 +74,7 @@ public partial class frmPlaylist : Form
                 }
                 if (!skip)
                 {
-                    mp3File = ".." + row.Cells[0].Value.ToString().Substring(2);
+                    mp3File = $"..{row.Cells[0].Value.ToString()[2..]}";
                     sw.WriteLine(mp3File);
                 }
             }
@@ -83,7 +83,7 @@ public partial class frmPlaylist : Form
         Dispose();
     }
 
-    private void cmbPlaylist_SelectedIndexChanged(object sender, EventArgs e)
+    private void CmbPlaylist_SelectedIndexChanged(object sender, EventArgs e)
     {
         chkMerge.Checked = false;
         if (File.Exists(PlaylistFolder.FullName + cmbPlaylist.Text))
@@ -93,7 +93,7 @@ public partial class frmPlaylist : Form
         chkMerge.Visible = cmbPlaylist.Text != "<newPlayList.m3u>";
     }
 
-    private void chkMerge_CheckedChanged(object sender, EventArgs e)
+    private void ChkMerge_CheckedChanged(object sender, EventArgs e)
     {
         StreamReader sr;
         string mp3File;
@@ -122,7 +122,7 @@ public partial class frmPlaylist : Form
             while (sr.Peek() >= 0)
             {
                 mp3File = sr.ReadLine();
-                mp3File = DriveLetter + mp3File.Substring(2);
+                mp3File = string.Concat(DriveLetter, mp3File.AsSpan(2));
                 if (File.Exists(mp3File))
                 {
                     if (DroppedFiles.Contains(mp3File))
@@ -144,7 +144,7 @@ public partial class frmPlaylist : Form
         }
     }
 
-    private void cmdValidatePlaylists_Click(object sender, EventArgs e)
+    private void CmdValidatePlaylists_Click(object sender, EventArgs e)
     {
         FileInfo[] availablePlayLists;
         StreamReader sr;
