@@ -1,5 +1,9 @@
 Unreleased
 
+1.2.1 - 2026-11-23
+
+PR4 Rename solution and project
+
 1.2.0 - 2026-11-22
 
 PR3 Upgrade to .NET 10
