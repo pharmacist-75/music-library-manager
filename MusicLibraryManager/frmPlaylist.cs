@@ -1,4 +1,4 @@
-﻿using MP3Management;
+﻿using MusicLibraryManager;
 using System;
 using System.Diagnostics;
 using System.Drawing;

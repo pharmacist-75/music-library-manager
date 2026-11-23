@@ -1,4 +1,4 @@
-﻿namespace MP3Management
+﻿namespace MusicLibraryManager
 {
     partial class FileNameDialog
     {

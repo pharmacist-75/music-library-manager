@@ -1,6 +1,6 @@
 ﻿using System.Windows.Forms;
 
-namespace MP3Management
+namespace MusicLibraryManager
 {
     public partial class FileNameDialog : Form
     {
