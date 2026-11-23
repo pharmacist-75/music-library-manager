@@ -3,9 +3,9 @@
     <OutputType>WinExe</OutputType>
     <TargetFramework>net10.0-windows</TargetFramework>
     <UseWindowsForms>true</UseWindowsForms>
-    <StartupObject>MP3Management.Program</StartupObject>
-    <RootNamespace>MP3Management</RootNamespace>
-    <AssemblyName>MP3Management</AssemblyName>
+    <StartupObject>MusicLibraryManager.Program</StartupObject>
+    <RootNamespace>MusicLibraryManager</RootNamespace>
+    <AssemblyName>MusicLibraryManager</AssemblyName>
     <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
     <ProjectGuid>{15452491-B8F4-4CA5-AEF0-04E25CF43770}</ProjectGuid>
   </PropertyGroup>
@@ -42,7 +42,7 @@
       <DependentUpon>Settings.settings</DependentUpon>
     </Compile>
     <EmbeddedResource Update="My Project\Resources.resx">
-      <LogicalName>MP3Management.Resources.resources</LogicalName>
+      <LogicalName>MusicLibraryManager.Resources.resources</LogicalName>
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>

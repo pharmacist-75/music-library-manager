@@ -1,7 +1,7 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
 
-namespace MP3Management.Tests
+namespace MusicLibraryManager.Tests
 {
     [TestClass]
     public class UnitTest1
