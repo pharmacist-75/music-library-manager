@@ -3,6 +3,7 @@ using System.ComponentModel;
 using System.Drawing;
 using System.IO;
 using System.Text;
+using System.Text.Json;
 using System.Windows.Forms;
 using IdSharp.Tagging.ID3v1;
 using IdSharp.Tagging.ID3v2;
@@ -12,7 +13,7 @@ using static PublicFunctions;
 public partial class frmMaster : Form
 {
     private string _action;
-    private const int MaxLengthArtistV1 = 30;
+    private MusicLibrarySettings _settings = new();
 
     public frmMaster()
     {
@@ -22,9 +23,17 @@ public partial class frmMaster : Form
     private void Form1_Load(object sender, EventArgs e)
     {
         AllowDrop = true;
-        txtDriveLetter.Text = Settings.Default.DriveLetter ?? Application.StartupPath.Substring(0, 2);
-        DriveLetter = txtDriveLetter.Text;
-        txtPlaylistFolder.Text = Settings.Default.PlaylistFolder ?? "";
+        
+        LoadSettings();
+
+        using JsonDocument document = JsonDocument.Parse(File.ReadAllText(settingsPath));
+
+        _settings = document.RootElement.GetProperty("MusicLibrary").Deserialize<MusicLibrarySettings>();
+
+        MusicLibraryFolder = _settings.MusicLibraryFolder ?? Application.StartupPath;
+        txtMusicLibraryFolder.Text = MusicLibraryFolder;
+
+        txtPlaylistFolder.Text = _settings.PlaylistFolder ?? "";
         if (txtPlaylistFolder.Text != "")
         {
             PlaylistFolder = new DirectoryInfo(txtPlaylistFolder.Text);
@@ -99,8 +108,8 @@ public partial class frmMaster : Form
         StreamWriter sw;
         TimeSpan length;
 
-        mp3Files = new DirectoryInfo(txtDriveLetter.Text).GetFiles("*.MP3");
-        sw = new StreamWriter(txtDriveLetter.Text + "\\ID3_Tags_2.CSV", false, Encoding.UTF8);
+        mp3Files = new DirectoryInfo(txtMusicLibraryFolder.Text).GetFiles("*.MP3");
+        sw = new StreamWriter(txtMusicLibraryFolder.Text + "\\ID3_Tags_2.CSV", false, Encoding.UTF8);
         sw.WriteLine("Filename;Album;Artist;Comment;Disc;Genre;Length;Lyrics;PaddingSize;Song;Title;Track;Year");
         foreach (FileInfo mp3File in mp3Files)
         {
@@ -141,16 +150,16 @@ public partial class frmMaster : Form
         sw.Close();
     }
 
-    private void cmdBrowse_Click(object sender, EventArgs e)
+    private void cmdBrowsePlaylistFolder_Click(object sender, EventArgs e)
     {
-        DialogResult dr;
-        FolderBrowserDialog1.SelectedPath = txtDriveLetter.Text + "\\PLAYLIST\\";
-        dr = FolderBrowserDialog1.ShowDialog();
+        FolderBrowserDialog1.SelectedPath = txtMusicLibraryFolder.Text + "\\PLAYLIST\\";
+        DialogResult dr = FolderBrowserDialog1.ShowDialog();
         if (dr == DialogResult.OK)
         {
             txtPlaylistFolder.Text = FolderBrowserDialog1.SelectedPath + "\\";
-            Settings.Default.PlaylistFolder = txtPlaylistFolder.Text;
-            Settings.Default.Save();
+            _settings.PlaylistFolder = txtPlaylistFolder.Text;
+            SaveSettings();
+            
             if (txtPlaylistFolder.Text != "")
             {
                 PlaylistFolder = new DirectoryInfo(txtPlaylistFolder.Text);
@@ -158,16 +167,11 @@ public partial class frmMaster : Form
         }
     }
 
-    private void txtDriveLetter_TextChanged(object sender, EventArgs e)
-    {
-        DriveLetter = txtDriveLetter.Text;
-    }
-
     private void cmdLoad_Click(object sender, EventArgs e)
     {
         FileInfo[] mp3Files;
         dgvSongs.Rows.Clear();
-        mp3Files = new DirectoryInfo(DriveLetter + "\\" + txtFolder.Text).GetFiles(txtFilter.Text);
+        mp3Files = new DirectoryInfo(txtMusicLibraryFolder.Text).GetFiles(txtFilter.Text);
         dgvSongs.Visible = false;
         labStatus.Visible = true;
         foreach (FileInfo mp3File in mp3Files)
@@ -248,7 +252,7 @@ public partial class frmMaster : Form
         string selectedVersion;
 
         dgvSongs.Rows.Clear();
-        mp3Files = new DirectoryInfo(DriveLetter + "\\" + txtFolder.Text).GetFiles(txtFilter.Text);
+        mp3Files = new DirectoryInfo(txtMusicLibraryFolder.Text).GetFiles(txtFilter.Text);
         dgvSongs.Visible = false;
         labStatus.Visible = true;
         if (optV1.Checked)
@@ -285,50 +289,49 @@ public partial class frmMaster : Form
                     }
                 }
             }
-            else
-            {
-                id3v2 = new ID3v2Tag(mp3File.FullName);
-                if (id3v2.Title != null)
+
+    private void cmdBrowseMusicLibraryFolder_Click(object sender, EventArgs e)
                 {
-                    tagArtist = id3v2.Title.ToUpper();
-                    version = "V2";
-                }
-                else
+        FolderBrowserDialog1.SelectedPath = txtMusicLibraryFolder.Text;
+        DialogResult dr = FolderBrowserDialog1.ShowDialog();
+        if (dr == DialogResult.OK)
                 {
-                    id3v1 = new ID3v1Tag(mp3File.FullName);
-                    if (id3v1.Title != null)
+            txtMusicLibraryFolder.Text = FolderBrowserDialog1.SelectedPath + "\\";
+            _settings.MusicLibraryFolder = txtMusicLibraryFolder.Text;
+            SaveSettings();
+
+            if (txtMusicLibraryFolder.Text != "")
                     {
-                        tagArtist = id3v1.Title.ToUpper();
-                        version = "V1";
+                MusicLibraryFolder = txtMusicLibraryFolder.Text;
                     }
                 }
             }
 
-            fileNameArtist = "";
-            fileNameArtist = parts[parts.Length - 1].Trim();
+    private void SaveSettings()
+    {
+        string settingsPath = Path.Combine(AppContext.BaseDirectory, "appsettings.json");
 
-            if (version == "")
+        JsonSerializerOptions options = new()
             {
-                AddRowToGridview(ref dgvSongs, mp3File.FullName, Color.Red, selectedVersion);
+            WriteIndented = true
+        };
+
+        string json = JsonSerializer.Serialize(new { MusicLibrary = _settings }, options);
+
+        File.WriteAllText(settingsPath, json);
             }
-            else
+
+    private void LoadSettings()
             {
-                if (version != selectedVersion)
+        string settingsPath = Path.Combine(AppContext.BaseDirectory, "appsettings.json");
+        if (File.Exists(settingsPath))
                 {
-                    AddRowToGridview(ref dgvSongs, mp3File.FullName, Color.Blue, version);
+            using JsonDocument document = JsonDocument.Parse(File.ReadAllText(settingsPath));
+            _settings = document.RootElement.GetProperty("MusicLibrary").Deserialize<MusicLibrarySettings>();
                 }
                 else
                 {
-                    if (selectedVersion == "V1" && fileNameArtist.Trim().Length > MaxLengthArtistV1)
-                    {
-                        fileNameArtist = fileNameArtist.Trim().Substring(0, MaxLengthArtistV1);
-                    }
-                    if (fileNameArtist.Trim().ToUpper() != tagArtist)
-                    {
-                        AddRowToGridview(ref dgvSongs, mp3File.FullName, Color.Black, version);
-                    }
-                }
-            }
+            _settings = new MusicLibrarySettings();
         }
         dgvSongs.Sort(dgvSongs.Columns[0], ListSortDirection.Ascending);
         labStatus.Visible = false;

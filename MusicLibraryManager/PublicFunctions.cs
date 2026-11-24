@@ -10,7 +10,7 @@ using System.Windows.Forms;
 
 internal static class PublicFunctions
 {
-    public static string DriveLetter;
+    public static string MusicLibraryFolder;
     public static DirectoryInfo PlaylistFolder;
     public static string[] DroppedFiles;
 
