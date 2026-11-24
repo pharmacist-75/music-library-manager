@@ -25,7 +25,7 @@ public partial class FrmPlaylist : Form
 
         foreach (string file in DroppedFiles)
         {
-            AddRowToGridview(ref dgvSongs, file, Color.Green, "V1");
+            AddRowToGridview(dgvSongs, file, Color.Green);
         }
     }
 
@@ -122,7 +122,7 @@ public partial class FrmPlaylist : Form
             while (sr.Peek() >= 0)
             {
                 mp3File = sr.ReadLine();
-                mp3File = string.Concat(DriveLetter, mp3File.AsSpan(2));
+                mp3File = string.Concat(MusicLibraryFolder, mp3File.AsSpan(2));
                 if (File.Exists(mp3File))
                 {
                     if (DroppedFiles.Contains(mp3File))
@@ -138,7 +138,7 @@ public partial class FrmPlaylist : Form
                 {
                     rowColor = Color.LightGray;
                 }
-                AddRowToGridview(ref dgvSongs, mp3File, rowColor, "V1");
+                AddRowToGridview(dgvSongs, mp3File, rowColor);
             }
             sr.Close();
         }
@@ -157,7 +157,7 @@ public partial class FrmPlaylist : Form
             sr = new StreamReader(playList.FullName);
             while (sr.Peek() >= 0)
             {
-                fileName = sr.ReadLine().Replace("..\\", DriveLetter + "\\");
+                fileName = sr.ReadLine().Replace("..\\", MusicLibraryFolder + "\\");
                 mp3File = new FileInfo(fileName);
                 if (!mp3File.Exists)
                 {

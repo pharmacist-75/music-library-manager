@@ -2,11 +2,11 @@
 using System.Runtime.InteropServices;
 
 // General information about the assembly.
-[assembly: AssemblyTitle("ID3Updater")]
+[assembly: AssemblyTitle("MusicLibraryManager")]
 [assembly: AssemblyDescription("")]
-[assembly: AssemblyCompany("GfK SE")]
-[assembly: AssemblyProduct("ID3Updater")]
-[assembly: AssemblyCopyright("Copyright © GfK SE 2015")]
+[assembly: AssemblyCompany("")]
+[assembly: AssemblyProduct("MusicLibraryManager")]
+[assembly: AssemblyCopyright("Copyright © 2026 Marco Schepp")]
 [assembly: AssemblyTrademark("")]
 
 // The following GUID is for the typelib ID if the project is exposed to COM.
