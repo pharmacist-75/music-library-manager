@@ -31,12 +31,12 @@
     <Compile Update="frmMaster.Designer.cs">
       <DependentUpon>frmMaster.cs</DependentUpon>
     </Compile>
-    <Compile Update="My Project\Resources.Designer.cs">
+    <Compile Update="Properties\Resources.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
-    <EmbeddedResource Update="My Project\Resources.resx">
+    <EmbeddedResource Update="Properties\Resources.resx">
       <LogicalName>MusicLibraryManager.Resources.resources</LogicalName>
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
