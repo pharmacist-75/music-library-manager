@@ -7,6 +7,7 @@ namespace MusicLibraryManager.Models
     {
         public string MusicLibraryFolder { get; set; } = "";
         public string PlaylistFolder { get; set; } = "";
+        public bool IncludeSubfolders { get; set; } = true;
         public List<string>? VisibleColumns { get; set; }
     }
 }

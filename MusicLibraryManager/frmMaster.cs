@@ -21,13 +21,19 @@ public partial class frmMaster : Form
         dgvSongs.ColumnHeaderMouseClick += DgvSongs_ColumnHeaderMouseClick;
     }
 
+    private void InitializeFormControls()
+    {
+        includeSubFoldersCheckBox.Checked = _settings.IncludeSubfolders;
+    }
+
     public frmMaster()
     {
         InitializeComponent();
-        LoadSettings();        
+        LoadSettings();
         InitializeColumns(dgvSongs);
         LoadColumnVisibility();
         InitializeColumnMenu();
+        InitializeFormControls();
     }
 
     private void Form1_Load(object sender, EventArgs e)
@@ -166,11 +172,18 @@ public partial class frmMaster : Form
 
     private void cmdLoad_Click(object sender, EventArgs e)
     {
-        FileInfo[] mp3Files;
-        dgvSongs.Rows.Clear();
-        mp3Files = new DirectoryInfo(txtMusicLibraryFolder.Text).GetFiles(txtFilter.Text);
         dgvSongs.Visible = false;
         labStatus.Visible = true;
+
+        DirectoryInfo directory = new(txtMusicLibraryFolder.Text);
+
+        SearchOption searchOption = includeSubFoldersCheckBox.Checked
+            ? SearchOption.AllDirectories
+            : SearchOption.TopDirectoryOnly;
+
+        FileInfo[] mp3Files = directory.GetFiles(txtFilter.Text, searchOption);
+
+        dgvSongs.Rows.Clear();
         foreach (FileInfo mp3File in mp3Files)
         {
             labStatus.Text = mp3File.FullName + "...";
@@ -388,5 +401,11 @@ public partial class frmMaster : Form
         column.Visible = item.Checked;
 
         SaveColumnVisibility();
+    }
+
+    private void includeSubFoldersCheckBox_CheckedChanged(object sender, EventArgs e)
+    {
+        _settings.IncludeSubfolders = ((CheckBox)sender).Checked;
+        SaveSettings();
     }
 }

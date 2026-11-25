@@ -39,6 +39,7 @@ public partial class frmMaster
         labFilter = new Label();
         cmdShowUnclear = new Button();
         cmdBrowseMusicLibraryFolder = new Button();
+        includeSubFoldersCheckBox = new CheckBox();
         ((ISupportInitialize)dgvSongs).BeginInit();
         SuspendLayout();
         // 
@@ -188,11 +189,25 @@ public partial class frmMaster
         cmdBrowseMusicLibraryFolder.UseVisualStyleBackColor = true;
         cmdBrowseMusicLibraryFolder.Click += cmdBrowseMusicLibraryFolder_Click;
         // 
+        // includeSubFoldersCheckBox
+        // 
+        includeSubFoldersCheckBox.AutoSize = true;
+        includeSubFoldersCheckBox.Checked = true;
+        includeSubFoldersCheckBox.CheckState = CheckState.Checked;
+        includeSubFoldersCheckBox.Location = new Point(914, 35);
+        includeSubFoldersCheckBox.Name = "includeSubFoldersCheckBox";
+        includeSubFoldersCheckBox.Size = new Size(126, 19);
+        includeSubFoldersCheckBox.TabIndex = 15;
+        includeSubFoldersCheckBox.Text = "include SubFolders";
+        includeSubFoldersCheckBox.UseVisualStyleBackColor = true;
+        includeSubFoldersCheckBox.CheckedChanged += includeSubFoldersCheckBox_CheckedChanged;
+        // 
         // frmMaster
         // 
         AutoScaleDimensions = new SizeF(7F, 15F);
         AutoScaleMode = AutoScaleMode.Font;
         ClientSize = new Size(1304, 452);
+        Controls.Add(includeSubFoldersCheckBox);
         Controls.Add(cmdBrowseMusicLibraryFolder);
         Controls.Add(cmdShowUnclear);
         Controls.Add(txtFilter);
@@ -233,4 +248,5 @@ public partial class frmMaster
     internal System.Windows.Forms.TextBox txtFilter;
     internal System.Windows.Forms.Label labFilter;
     internal System.Windows.Forms.Button cmdShowUnclear;
+    private CheckBox includeSubFoldersCheckBox;
 }
