@@ -27,10 +27,6 @@ public partial class FrmPlaylist
         this.labPlaylist = new System.Windows.Forms.Label();
         this.cmbPlaylist = new System.Windows.Forms.ComboBox();
         this.dgvSongs = new System.Windows.Forms.DataGridView();
-        this.colFileName = new System.Windows.Forms.DataGridViewTextBoxColumn();
-        this.colArtist = new System.Windows.Forms.DataGridViewTextBoxColumn();
-        this.colTitle = new System.Windows.Forms.DataGridViewTextBoxColumn();
-        this.colAlbum = new System.Windows.Forms.DataGridViewTextBoxColumn();
         this.cmdOk = new System.Windows.Forms.Button();
         this.cmdCancel = new System.Windows.Forms.Button();
         this.chkMerge = new System.Windows.Forms.CheckBox();
@@ -60,27 +56,10 @@ public partial class FrmPlaylist
         this.dgvSongs.AllowUserToResizeRows = false;
         this.dgvSongs.Anchor = (((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) | System.Windows.Forms.AnchorStyles.Left) | System.Windows.Forms.AnchorStyles.Right);
         this.dgvSongs.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-        this.dgvSongs.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] { this.colFileName, this.colArtist, this.colTitle, this.colAlbum });
         this.dgvSongs.Location = new System.Drawing.Point(12, 55);
         this.dgvSongs.Name = "dgvSongs";
         this.dgvSongs.Size = new System.Drawing.Size(1094, 303);
         this.dgvSongs.TabIndex = 2;
-        // colFileName
-        this.colFileName.HeaderText = "FileName";
-        this.colFileName.Name = "colFileName";
-        this.colFileName.Width = 300;
-        // colArtist
-        this.colArtist.HeaderText = "Artist";
-        this.colArtist.Name = "colArtist";
-        this.colArtist.Width = 200;
-        // colTitle
-        this.colTitle.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
-        this.colTitle.HeaderText = "Title";
-        this.colTitle.Name = "colTitle";
-        // colAlbum
-        this.colAlbum.HeaderText = "Album";
-        this.colAlbum.Name = "colAlbum";
-        this.colAlbum.Width = 200;
         // cmdOk
         this.cmdOk.Anchor = (System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right);
         this.cmdOk.Location = new System.Drawing.Point(1031, 10);
@@ -182,10 +161,6 @@ public partial class FrmPlaylist
     internal System.Windows.Forms.Label labPlaylist;
     internal System.Windows.Forms.ComboBox cmbPlaylist;
     internal System.Windows.Forms.DataGridView dgvSongs;
-    internal System.Windows.Forms.DataGridViewTextBoxColumn colFileName;
-    internal System.Windows.Forms.DataGridViewTextBoxColumn colArtist;
-    internal System.Windows.Forms.DataGridViewTextBoxColumn colTitle;
-    internal System.Windows.Forms.DataGridViewTextBoxColumn colAlbum;
     internal System.Windows.Forms.Button cmdOk;
     internal System.Windows.Forms.Button cmdCancel;
     internal System.Windows.Forms.CheckBox chkMerge;
