@@ -1,12 +1,13 @@
-﻿using System;
+﻿using MusicLibraryManager.Models;
+using MusicLibraryManager.Services;
+using System;
 using System.ComponentModel;
 using System.Drawing;
 using System.IO;
+using System.Linq;
 using System.Text;
 using System.Text.Json;
 using System.Windows.Forms;
-using MusicLibraryManager.Models;
-using MusicLibraryManager.Services;
 using static PublicFunctions;
 
 public partial class frmMaster : Form
@@ -23,15 +24,15 @@ public partial class frmMaster : Form
     public frmMaster()
     {
         InitializeComponent();
+        LoadSettings();        
         InitializeColumns(dgvSongs);
+        LoadColumnVisibility();
         InitializeColumnMenu();
     }
 
     private void Form1_Load(object sender, EventArgs e)
     {
         AllowDrop = true;
-
-        LoadSettings();
 
         MusicLibraryFolder = _settings.MusicLibraryFolder ?? Application.StartupPath;
         txtMusicLibraryFolder.Text = MusicLibraryFolder;
@@ -325,6 +326,30 @@ public partial class frmMaster : Form
         }
     }
 
+    private void SaveColumnVisibility()
+    {
+        _settings.VisibleColumns = dgvSongs.Columns
+            .Cast<DataGridViewColumn>()
+            .Where(column => column.Visible)
+            .Select(column => column.Name)
+            .ToList();
+
+        SaveSettings();
+    }
+
+    private void LoadColumnVisibility()
+    {
+        if (_settings.VisibleColumns is null)
+        {
+            return;
+        }
+
+        foreach (DataGridViewColumn column in dgvSongs.Columns)
+        {
+            column.Visible = column.Name == "FileName" || _settings.VisibleColumns.Contains(column.Name);
+        }
+    }
+
     private void DgvSongs_ColumnHeaderMouseClick(object sender, DataGridViewCellMouseEventArgs e)
     {
         if (e.Button != MouseButtons.Right)
@@ -361,5 +386,7 @@ public partial class frmMaster : Form
         }
 
         column.Visible = item.Checked;
+
+        SaveColumnVisibility();
     }
 }
