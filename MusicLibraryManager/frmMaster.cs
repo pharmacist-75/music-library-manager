@@ -13,11 +13,18 @@ public partial class frmMaster : Form
 {
     private string _action;
     private MusicLibrarySettings _settings = new();
+    private readonly ContextMenuStrip _columnMenu = new();
+
+    private void InitializeColumnMenu()
+    {
+        dgvSongs.ColumnHeaderMouseClick += DgvSongs_ColumnHeaderMouseClick;
+    }
 
     public frmMaster()
     {
         InitializeComponent();
         InitializeColumns(dgvSongs);
+        InitializeColumnMenu();
     }
 
     private void Form1_Load(object sender, EventArgs e)
@@ -316,5 +323,43 @@ public partial class frmMaster : Form
         {
             _settings = new MusicLibrarySettings();
         }
+    }
+
+    private void DgvSongs_ColumnHeaderMouseClick(object sender, DataGridViewCellMouseEventArgs e)
+    {
+        if (e.Button != MouseButtons.Right)
+        {
+            return;
+        }
+
+        _columnMenu.Items.Clear();
+
+        foreach (DataGridViewColumn column in dgvSongs.Columns)
+        {
+            ToolStripMenuItem item = new()
+            {
+                Text = column.HeaderText,
+                Checked = column.Visible,
+                CheckOnClick = true,
+                Tag = column,
+                Enabled = column.Name != "FileName"
+            };
+
+            item.CheckedChanged += ColumnMenuItem_CheckedChanged;
+
+            _columnMenu.Items.Add(item);
+        }
+
+        _columnMenu.Show(Cursor.Position);
+    }
+
+    private void ColumnMenuItem_CheckedChanged(object sender, EventArgs e)
+    {
+        if (sender is not ToolStripMenuItem item || item.Tag is not DataGridViewColumn column)
+        {
+            return;
+        }
+
+        column.Visible = item.Checked;
     }
 }
