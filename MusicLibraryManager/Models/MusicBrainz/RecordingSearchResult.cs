@@ -7,5 +7,8 @@ namespace MusicLibraryManager.Models.MusicBrainz
     {
         [JsonPropertyName("recordings")]
         public List<Recording> Recordings { get; set; } = [];
+
+        [JsonPropertyName("count")]
+        public int Count { get; set; }
     }
 }
