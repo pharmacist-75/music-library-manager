@@ -17,6 +17,7 @@ public partial class frmMaster : Form
     public frmMaster()
     {
         InitializeComponent();
+        InitializeColumns(dgvSongs);
     }
 
     private void Form1_Load(object sender, EventArgs e)
@@ -58,18 +59,19 @@ public partial class frmMaster : Form
 
         foreach (DataGridViewRow row in dgvSongs.Rows)
         {
-            updateArtist = ((row.Cells[1].Style.ForeColor == Color.Red || row.Cells[1].Style.ForeColor == Color.Blue) && row.Cells[1].Value != null);
-            updateTitle = ((row.Cells[2].Style.ForeColor == Color.Red || row.Cells[2].Style.ForeColor == Color.Blue) && row.Cells[2].Value != null);
-            updateAlbum = ((row.Cells[3].Style.ForeColor == Color.Red || row.Cells[3].Style.ForeColor == Color.Blue) && row.Cells[3].Value != null);
+            updateArtist = ((row.Cells["Artist"].Style.ForeColor == Color.Red || row.Cells["Artist"].Style.ForeColor == Color.Blue) && row.Cells["Artist"].Value != null);
+            updateTitle = ((row.Cells["Title"].Style.ForeColor == Color.Red || row.Cells["Title"].Style.ForeColor == Color.Blue) && row.Cells["Title"].Value != null);
+            updateAlbum = ((row.Cells["Album"].Style.ForeColor == Color.Red || row.Cells["Album"].Style.ForeColor == Color.Blue) && row.Cells["Album"].Value != null);
 
             if (updateAlbum || updateArtist || updateTitle)
             {
-                FileInfo fileInfo = new(row.Cells[0].Value.ToString());
+                string fileNamePath = Path.Combine(row.Cells["Folder"].Value.ToString(), row.Cells["Filename"].Value.ToString());
+                FileInfo fileInfo = new(fileNamePath);
 
                 MusicMetadata metadata = MusicMetadataService.LoadMetadata(fileInfo.FullName);
-                if (updateArtist) metadata.Artist = row.Cells[1].Value.ToString();
-                if (updateTitle) metadata.Title = row.Cells[2].Value.ToString();
-                if (updateAlbum) metadata.Album = row.Cells[3].Value.ToString();
+                if (updateArtist) metadata.Artist = row.Cells["Artist"].Value.ToString();
+                if (updateTitle) metadata.Title = row.Cells["Title"].Value.ToString();
+                if (updateAlbum) metadata.Album = row.Cells["Album"].Value.ToString();
                 MusicMetadataService.UpdateMetadata(metadata, fileInfo.FullName);
             }
         }
@@ -165,9 +167,9 @@ public partial class frmMaster : Form
         {
             labStatus.Text = mp3File.FullName + "...";
             Application.DoEvents();
-            AddRowToGridview(dgvSongs, mp3File.FullName, Color.Black);
+            AddRowToGridview(dgvSongs, mp3File, Color.Black);
         }
-        dgvSongs.Sort(dgvSongs.Columns[0], ListSortDirection.Ascending);
+        dgvSongs.Sort(dgvSongs.Columns["Filename"], ListSortDirection.Ascending);
         labStatus.Visible = false;
         dgvSongs.Visible = true;
         _action = "LOAD";
@@ -183,7 +185,8 @@ public partial class frmMaster : Form
 
         if (e.ColumnIndex == 0)
         {
-            mp3File = new FileInfo(dgvSongs.Rows[e.RowIndex].Cells[0].Value.ToString());
+            string fileNamePath = Path.Combine(dgvSongs.Rows[e.RowIndex].Cells["Directory"].Value.ToString(), dgvSongs.Rows[e.RowIndex].Cells["Filename"].Value.ToString());
+            mp3File = new FileInfo(fileNamePath);
             parts = mp3File.Name.Replace(mp3File.Extension, "").Split(myDelims, StringSplitOptions.None);
             artist = "";
             if (parts.Length > 2)
@@ -198,20 +201,21 @@ public partial class frmMaster : Form
             {
                 artist = parts[0].Trim();
             }
-            dgvSongs.Rows[e.RowIndex].Cells[1].Value = artist;
-            dgvSongs.Rows[e.RowIndex].Cells[1].Style.ForeColor = Color.Red;
-            dgvSongs.Rows[e.RowIndex].Cells[2].Value = parts[parts.Length - 1].Trim();
-            dgvSongs.Rows[e.RowIndex].Cells[2].Style.ForeColor = Color.Red;
+            dgvSongs.Rows[e.RowIndex].Cells["Artist"].Value = artist;
+            dgvSongs.Rows[e.RowIndex].Cells["Artist"].Style.ForeColor = Color.Red;
+            dgvSongs.Rows[e.RowIndex].Cells["Title"].Value = parts[parts.Length - 1].Trim();
+            dgvSongs.Rows[e.RowIndex].Cells["Title"].Style.ForeColor = Color.Red;
         }
         if (e.ColumnIndex == 1 || e.ColumnIndex == 2)
         {
-            mp3File = new FileInfo(dgvSongs.Rows[e.RowIndex].Cells[0].Value.ToString());
-            newFileName = Convert.ToString(dgvSongs.Rows[e.RowIndex].Cells[1].Value);
+            string fileNamePath = Path.Combine(dgvSongs.Rows[e.RowIndex].Cells["Directory"].Value.ToString(), dgvSongs.Rows[e.RowIndex].Cells["Filename"].Value.ToString());
+            mp3File = new FileInfo(fileNamePath);
+            newFileName = Convert.ToString(dgvSongs.Rows[e.RowIndex].Cells["Artist"].Value);
             newFileName += " - ";
-            newFileName += Convert.ToString(dgvSongs.Rows[e.RowIndex].Cells[2].Value);
+            newFileName += Convert.ToString(dgvSongs.Rows[e.RowIndex].Cells["Title"].Value);
             newFileName += ".mp3";
             mp3File.MoveTo(mp3File.DirectoryName + "\\" + newFileName.Replace("?", "").Replace("/", ""));
-            dgvSongs.Rows[e.RowIndex].Cells[0].Value = mp3File.FullName;
+            dgvSongs.Rows[e.RowIndex].Cells["Filename"].Value = mp3File.FullName;
         }
     }
 
@@ -252,18 +256,18 @@ public partial class frmMaster : Form
 
             if (tagArtist == "")
             {
-                AddRowToGridview(dgvSongs, mp3File.FullName, Color.Red);
+                AddRowToGridview(dgvSongs, mp3File, Color.Red);
             }
             else
             {
                 if (fileNameArtist.Trim().ToUpper() != tagArtist)
                 {
-                    AddRowToGridview(dgvSongs, mp3File.FullName, Color.Black);
+                    AddRowToGridview(dgvSongs, mp3File, Color.Black);
                 }
             }
         }
 
-        dgvSongs.Sort(dgvSongs.Columns[0], ListSortDirection.Ascending);
+        dgvSongs.Sort(dgvSongs.Columns["Filename"], ListSortDirection.Ascending);
         labStatus.Visible = false;
         dgvSongs.Visible = true;
         _action = "SHOW_UNCLEAR";

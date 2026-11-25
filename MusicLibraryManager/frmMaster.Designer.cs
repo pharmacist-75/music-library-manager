@@ -33,10 +33,6 @@ public partial class frmMaster
         cmdBrowsePlaylistFolder = new Button();
         txtMusicLibraryFolder = new TextBox();
         dgvSongs = new DataGridView();
-        colFileName = new DataGridViewTextBoxColumn();
-        colArtist = new DataGridViewTextBoxColumn();
-        colTitle = new DataGridViewTextBoxColumn();
-        colAlbum = new DataGridViewTextBoxColumn();
         cmdLoad = new Button();
         labStatus = new Label();
         txtFilter = new TextBox();
@@ -121,7 +117,6 @@ public partial class frmMaster
         dgvSongs.AllowUserToResizeRows = false;
         dgvSongs.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
         dgvSongs.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-        dgvSongs.Columns.AddRange(new DataGridViewColumn[] { colFileName, colArtist, colTitle, colAlbum });
         dgvSongs.Location = new Point(14, 63);
         dgvSongs.Margin = new Padding(4, 3, 4, 3);
         dgvSongs.Name = "dgvSongs";
@@ -129,30 +124,6 @@ public partial class frmMaster
         dgvSongs.TabIndex = 8;
         dgvSongs.CellDoubleClick += dgvSongs_CellDoubleClick;
         dgvSongs.CellEndEdit += dgvSongs_CellEndEdit;
-        // 
-        // colFileName
-        // 
-        colFileName.HeaderText = "FileName";
-        colFileName.Name = "colFileName";
-        colFileName.Width = 300;
-        // 
-        // colArtist
-        // 
-        colArtist.HeaderText = "Artist";
-        colArtist.Name = "colArtist";
-        colArtist.Width = 200;
-        // 
-        // colTitle
-        // 
-        colTitle.AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
-        colTitle.HeaderText = "Title";
-        colTitle.Name = "colTitle";
-        // 
-        // colAlbum
-        // 
-        colAlbum.HeaderText = "Album";
-        colAlbum.Name = "colAlbum";
-        colAlbum.Width = 200;
         // 
         // cmdLoad
         // 
@@ -257,10 +228,6 @@ public partial class frmMaster
     internal System.Windows.Forms.Button cmdBrowseMusicLibraryFolder;
     internal System.Windows.Forms.TextBox txtMusicLibraryFolder;
     internal System.Windows.Forms.DataGridView dgvSongs;
-    internal System.Windows.Forms.DataGridViewTextBoxColumn colFileName;
-    internal System.Windows.Forms.DataGridViewTextBoxColumn colArtist;
-    internal System.Windows.Forms.DataGridViewTextBoxColumn colTitle;
-    internal System.Windows.Forms.DataGridViewTextBoxColumn colAlbum;
     internal System.Windows.Forms.Button cmdLoad;
     internal System.Windows.Forms.Label labStatus;
     internal System.Windows.Forms.TextBox txtFilter;

@@ -1,4 +1,5 @@
 ﻿using MusicLibraryManager;
+using MusicLibraryManager.Models;
 using System;
 using System.Diagnostics;
 using System.Drawing;
@@ -12,6 +13,7 @@ public partial class FrmPlaylist : Form
     public FrmPlaylist()
     {
         InitializeComponent();
+        InitializeColumns(dgvSongs);
     }
 
     private void FrmPlaylist_Load(object sender, EventArgs e)
@@ -25,7 +27,7 @@ public partial class FrmPlaylist : Form
 
         foreach (string file in DroppedFiles)
         {
-            AddRowToGridview(dgvSongs, file, Color.Green);
+            AddRowToGridview(dgvSongs, new FileInfo(file), Color.Green);
         }
     }
 
@@ -65,16 +67,16 @@ public partial class FrmPlaylist : Form
             {
                 if (chkMerge.Checked)
                 {
-                    skip = row.Cells[0].Style.ForeColor == Color.Red;
-                    skip |= (row.Cells[0].Style.ForeColor == Color.LightGray);
+                    skip = row.Cells["FileName"].Style.ForeColor == Color.Red;
+                    skip |= (row.Cells["FileName"].Style.ForeColor == Color.LightGray);
                 }
                 else
                 {
-                    skip = row.Cells[0].Style.ForeColor != Color.Green;
+                    skip = row.Cells["FileName"].Style.ForeColor != Color.Green;
                 }
                 if (!skip)
                 {
-                    mp3File = $"..{row.Cells[0].Value.ToString()[2..]}";
+                    mp3File = $"..{row.Cells["FileName"].Value.ToString()[2..]}";
                     sw.WriteLine(mp3File);
                 }
             }
@@ -107,7 +109,7 @@ public partial class FrmPlaylist : Form
                 rowRemoved = false;
                 foreach (DataGridViewRow row in dgvSongs.Rows)
                 {
-                    if (row.Cells[0].Style.ForeColor != Color.Green)
+                    if (row.Cells["FileName"].Style.ForeColor != Color.Green)
                     {
                         dgvSongs.Rows.Remove(row);
                         rowRemoved = true;
@@ -138,7 +140,7 @@ public partial class FrmPlaylist : Form
                 {
                     rowColor = Color.LightGray;
                 }
-                AddRowToGridview(dgvSongs, mp3File, rowColor);
+                AddRowToGridview(dgvSongs, new FileInfo(mp3File), rowColor);
             }
             sr.Close();
         }
