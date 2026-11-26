@@ -2,6 +2,7 @@
 
 namespace MusicLibraryManager.Models.MusicBrainz;
 
+#nullable enable
 public sealed class Artist
 {
     [JsonPropertyName("id")]
@@ -9,4 +10,10 @@ public sealed class Artist
 
     [JsonPropertyName("name")]
     public string Name { get; set; } = "";
+
+    [JsonPropertyName("score")]
+    public int? Score { get; set; }
+
+    [JsonPropertyName("disambiguation")]
+    public string? Disambiguation { get; set; }
 }

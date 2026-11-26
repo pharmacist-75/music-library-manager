@@ -3,6 +3,7 @@ using System.Text.Json.Serialization;
 
 namespace MusicLibraryManager.Models.MusicBrainz;
 
+#nullable enable
 public sealed class Recording
 {
     [JsonPropertyName("id")]

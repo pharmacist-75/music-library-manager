@@ -2,6 +2,7 @@
 
 namespace MusicLibraryManager.Models.MusicBrainz;
 
+#nullable enable
 public sealed class Release
 {
     [JsonPropertyName("id")]

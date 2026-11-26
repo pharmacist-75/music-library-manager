@@ -1,6 +1,7 @@
 ﻿using MusicLibraryManager.Models.MusicBrainz;
 using System;
 using System.IO;
+using System.Net;
 using System.Net.Http;
 using System.Text.Json;
 using System.Threading;
@@ -26,61 +27,65 @@ internal sealed class MusicBrainzService : IDisposable
 
         string url = $"https://musicbrainz.org/ws/2/recording/?query={Uri.EscapeDataString(query)}&fmt=json&limit=25";
 
-        await _rateLimiter.WaitAsync(cancellationToken);
-
-        try
-        {
-            TimeSpan remaining = TimeSpan.FromSeconds(1) - (DateTime.UtcNow - _lastRequest);
-
-            if (remaining > TimeSpan.Zero)
-            {
-                await Task.Delay(remaining, cancellationToken);
-            }
-
-            _lastRequest = DateTime.UtcNow;
-
-            using HttpResponseMessage response = await _client.GetAsync(url, cancellationToken);
-
-            response.EnsureSuccessStatusCode();
-
-            await using Stream stream = await response.Content.ReadAsStreamAsync(cancellationToken);
-
-            RecordingSearchResult? result = await JsonSerializer.DeserializeAsync<RecordingSearchResult>(stream, cancellationToken: cancellationToken);
-
-            return result ?? new RecordingSearchResult();
-        }
-        finally
-        {
-            _rateLimiter.Release();
-        }
+        return await GetMusicBrainzAsync<RecordingSearchResult>(url, cancellationToken);
     }
 
     public async Task<ReleaseDetails> GetReleaseAsync(string releaseId, CancellationToken cancellationToken = default)
     {
         string url = $"https://musicbrainz.org/ws/2/release/{Uri.EscapeDataString(releaseId)}?inc=recordings+artist-credits+release-groups&fmt=json";
 
+        return await GetMusicBrainzAsync<ReleaseDetails>(url, cancellationToken);
+    }
+
+    public async Task<ArtistSearchResult> SearchArtistsAsync(string name, CancellationToken cancellationToken = default)
+    {
+        string query = $"artist:\"{name.Replace("\"", "\\\"")}\"";
+        string url = $"https://musicbrainz.org/ws/2/artist/?query={Uri.EscapeDataString(query)}&fmt=json&limit=10";
+
+        return await GetMusicBrainzAsync<ArtistSearchResult>(url, cancellationToken);
+    }
+
+    public async Task<ReleaseGroupSearchResult> GetAlbumGroupsAsync(string artistId, int offset = 0, CancellationToken cancellationToken = default)
+    {
+        string url = $"https://musicbrainz.org/ws/2/release-group/?artist={Uri.EscapeDataString(artistId)}&type=album&limit=100&offset={offset}&fmt=json";
+
+        return await GetMusicBrainzAsync<ReleaseGroupSearchResult>(url, cancellationToken);
+    }
+
+    private async Task<T> GetMusicBrainzAsync<T>(string url, CancellationToken cancellationToken) where T : class
+    {
         await _rateLimiter.WaitAsync(cancellationToken);
 
         try
         {
-            TimeSpan remaining = TimeSpan.FromSeconds(1) - (DateTime.UtcNow - _lastRequest);
-
-            if (remaining > TimeSpan.Zero)
+            for (int attempt = 0; attempt < 4; attempt++)
             {
-                await Task.Delay(remaining, cancellationToken);
+                TimeSpan remaining = TimeSpan.FromMilliseconds(1100) - (DateTime.UtcNow - _lastRequest);
+
+                if (remaining > TimeSpan.Zero)
+                {
+                    await Task.Delay(remaining, cancellationToken);
+                }
+
+                _lastRequest = DateTime.UtcNow;
+
+                using HttpResponseMessage response = await _client.GetAsync(url, cancellationToken);
+
+                if (response.StatusCode == HttpStatusCode.ServiceUnavailable && attempt < 3)
+                {
+                    await Task.Delay(TimeSpan.FromSeconds(Math.Pow(2, attempt + 1)), cancellationToken);
+                    continue;
+                }
+
+                response.EnsureSuccessStatusCode();
+
+                await using Stream stream = await response.Content.ReadAsStreamAsync(cancellationToken);
+                T? result = await JsonSerializer.DeserializeAsync<T>(stream, cancellationToken: cancellationToken);
+
+                return result ?? throw new JsonException("MusicBrainz returned an empty response.");
             }
 
-            _lastRequest = DateTime.UtcNow;
-
-            using HttpResponseMessage response = await _client.GetAsync(url, cancellationToken);
-
-            response.EnsureSuccessStatusCode();
-
-            await using Stream stream = await response.Content.ReadAsStreamAsync(cancellationToken);
-
-            ReleaseDetails? release = await JsonSerializer.DeserializeAsync<ReleaseDetails>(stream, cancellationToken: cancellationToken);
-
-            return release ?? throw new JsonException("MusicBrainz returned an empty release.");
+            throw new InvalidOperationException("MusicBrainz request failed.");
         }
         finally
         {

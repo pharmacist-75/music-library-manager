@@ -66,6 +66,26 @@ internal sealed class MusicBrainzCacheService
         Store($"release:{releaseId.Trim().ToLowerInvariant()}", release);
     }
 
+    public ArtistSearchResult? GetArtists(string name)
+    {
+        return Get<ArtistSearchResult>($"artist-search:{Normalize(name)}");
+    }
+
+    public void StoreArtists(string name, ArtistSearchResult result)
+    {
+        Store($"artist-search:{Normalize(name)}", result);
+    }
+
+    public ReleaseGroupSearchResult? GetAlbumGroups(string artistId, int offset)
+    {
+        return Get<ReleaseGroupSearchResult>($"album-groups:{Normalize(artistId)}:{offset}");
+    }
+
+    public void StoreAlbumGroups(string artistId, int offset, ReleaseGroupSearchResult result)
+    {
+        Store($"album-groups:{Normalize(artistId)}:{offset}", result);
+    }
+
     private void Save()
     {
         JsonSerializerOptions options = new()
