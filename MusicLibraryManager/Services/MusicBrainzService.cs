@@ -55,6 +55,39 @@ internal sealed class MusicBrainzService : IDisposable
         }
     }
 
+    public async Task<ReleaseDetails> GetReleaseAsync(string releaseId, CancellationToken cancellationToken = default)
+    {
+        string url = $"https://musicbrainz.org/ws/2/release/{Uri.EscapeDataString(releaseId)}?inc=recordings+artist-credits+release-groups&fmt=json";
+
+        await _rateLimiter.WaitAsync(cancellationToken);
+
+        try
+        {
+            TimeSpan remaining = TimeSpan.FromSeconds(1) - (DateTime.UtcNow - _lastRequest);
+
+            if (remaining > TimeSpan.Zero)
+            {
+                await Task.Delay(remaining, cancellationToken);
+            }
+
+            _lastRequest = DateTime.UtcNow;
+
+            using HttpResponseMessage response = await _client.GetAsync(url, cancellationToken);
+
+            response.EnsureSuccessStatusCode();
+
+            await using Stream stream = await response.Content.ReadAsStreamAsync(cancellationToken);
+
+            ReleaseDetails? release = await JsonSerializer.DeserializeAsync<ReleaseDetails>(stream, cancellationToken: cancellationToken);
+
+            return release ?? throw new JsonException("MusicBrainz returned an empty release.");
+        }
+        finally
+        {
+            _rateLimiter.Release();
+        }
+    }
+
     public void Dispose()
     {
         _client.Dispose();

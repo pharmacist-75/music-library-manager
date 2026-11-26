@@ -56,6 +56,16 @@ internal sealed class MusicBrainzCacheService
         }
     }
 
+    public ReleaseDetails? GetRelease(string releaseId)
+    {
+        return Get<ReleaseDetails>($"release:{releaseId.Trim().ToLowerInvariant()}");
+    }
+
+    public void StoreRelease(string releaseId, ReleaseDetails release)
+    {
+        Store($"release:{releaseId.Trim().ToLowerInvariant()}", release);
+    }
+
     private void Save()
     {
         JsonSerializerOptions options = new()
