@@ -86,6 +86,16 @@ internal sealed class MusicBrainzCacheService
         Store($"album-groups:{Normalize(artistId)}:{offset}", result);
     }
 
+    public ReleaseBrowseResult? GetReleases(string releaseGroupId, int offset)
+    {
+        return Get<ReleaseBrowseResult>($"releases:{Normalize(releaseGroupId)}:{offset}");
+    }
+
+    public void StoreReleases(string releaseGroupId, int offset, ReleaseBrowseResult result)
+    {
+        Store($"releases:{Normalize(releaseGroupId)}:{offset}", result);
+    }
+
     private void Save()
     {
         JsonSerializerOptions options = new()
