@@ -1,5 +1,9 @@
 Unreleased
 
+1.4.0 - 2026-11-25
+
+PR6 Integrate MusicBrainz API for enhanced metadata retrieval
+
 1.3.0 - 2026-11-24
 
 PR5 Extend music metadata management
