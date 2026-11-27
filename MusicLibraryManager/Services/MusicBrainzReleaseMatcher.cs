@@ -3,6 +3,7 @@ using MusicLibraryManager.Models.MusicBrainz;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 
 namespace MusicLibraryManager.Services;
 
@@ -17,6 +18,8 @@ internal sealed class MusicBrainzReleaseMatcher
             Album = release.Title,
             TotalTracks = release.Media.Sum(medium => medium.Tracks.Count)
         };
+        
+        bool isLiveAlbum = release.ReleaseGroup?.SecondaryTypes.Contains("Live", StringComparer.OrdinalIgnoreCase) == true;
 
         HashSet<string> artists = release.ArtistCredits
             .Select(credit => Normalize(credit.Name ?? credit.Artist?.Name))
@@ -32,14 +35,28 @@ internal sealed class MusicBrainzReleaseMatcher
 
         foreach ((ReleaseMedium medium, ReleaseTrack track) in releaseTracks)
         {
-            string title = Normalize(track.Title ?? track.Recording?.Title);
+            string originalTitle = track.Title ?? track.Recording?.Title ?? "";
+            (string cleanTitle, _, bool trackIsLive) = MusicTitleParser.Parse(originalTitle);
+
+            bool isLiveRecording = isLiveAlbum || trackIsLive;
+            string title = Normalize(cleanTitle);
 
             List<LocalMusicTrack> matches = candidates
-                .Where(candidate => Normalize(candidate.Title) == title)
+                .Where(candidate => Normalize(candidate.Title) == title
+                    && candidate.IsLiveVersion == isLiveRecording)
                 .ToList();
 
             // Skip ambiguous matches instead of choosing arbitrarily.
-            if (matches.Count != 1 || releaseTracks.Count(item => Normalize(item.Track.Title ?? item.Track.Recording?.Title) == title) != 1)
+            int matchingTrackCount = releaseTracks.Count(item =>
+            {
+                string itemTitle = item.Track.Title ?? item.Track.Recording?.Title ?? "";
+                (string cleanItemTitle, _, bool itemIsLive) = MusicTitleParser.Parse(itemTitle);
+
+                return Normalize(cleanItemTitle) == title
+                    && (isLiveAlbum || itemIsLive) == isLiveRecording;
+            });
+
+            if (matches.Count != 1 || matchingTrackCount != 1)
             {
                 continue;
             }
@@ -69,6 +86,16 @@ internal sealed class MusicBrainzReleaseMatcher
 
     private static string Normalize(string? value)
     {
-        return (value ?? "").Trim().ToUpperInvariant();
+        return (value ?? "")
+            .Normalize(NormalizationForm.FormKC)
+            .Replace('’', '\'')
+            .Replace('‘', '\'')
+            .Replace('`', '\'')
+            .Replace('–', '-')
+            .Replace('—', '-')
+            .Replace('‑', '-')
+            .Replace("&", "and")
+            .Trim()
+            .ToUpperInvariant();
     }
 }

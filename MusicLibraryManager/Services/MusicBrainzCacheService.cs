@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Text.Json;
 
 namespace MusicLibraryManager.Services;
@@ -94,6 +95,28 @@ internal sealed class MusicBrainzCacheService
     public void StoreReleases(string releaseGroupId, int offset, ReleaseBrowseResult result)
     {
         Store($"releases:{Normalize(releaseGroupId)}:{offset}", result);
+    }
+
+    public ReleaseGroup? GetReleaseGroup(string releaseGroupId)
+    {
+        return Get<ReleaseGroup>($"release-group:{Normalize(releaseGroupId)}");
+    }
+
+    public void StoreReleaseGroup(ReleaseGroup group)
+    {
+        Store($"release-group:{Normalize(group.Id)}", group);
+    }
+
+    public List<ReleaseDetails> GetCachedReleases()
+    {
+        lock (_syncRoot)
+        {
+            return _cache
+                .Where(entry => entry.Key.StartsWith("release:", StringComparison.OrdinalIgnoreCase))
+                .Select(entry => JsonSerializer.Deserialize<ReleaseDetails>(entry.Value.Json))
+                .OfType<ReleaseDetails>()
+                .ToList();
+        }
     }
 
     private void Save()

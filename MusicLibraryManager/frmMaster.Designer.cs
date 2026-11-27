@@ -40,6 +40,8 @@ public partial class frmMaster
         cmdShowUnclear = new Button();
         cmdBrowseMusicLibraryFolder = new Button();
         includeSubFoldersCheckBox = new CheckBox();
+        analyzeButton = new Button();
+        cancelButton = new Button();
         ((ISupportInitialize)dgvSongs).BeginInit();
         SuspendLayout();
         // 
@@ -202,11 +204,37 @@ public partial class frmMaster
         includeSubFoldersCheckBox.UseVisualStyleBackColor = true;
         includeSubFoldersCheckBox.CheckedChanged += includeSubFoldersCheckBox_CheckedChanged;
         // 
+        // analyzeButton
+        // 
+        analyzeButton.Anchor = AnchorStyles.Top | AnchorStyles.Right;
+        analyzeButton.Location = new Point(1106, 29);
+        analyzeButton.Margin = new Padding(4, 3, 4, 3);
+        analyzeButton.Name = "analyzeButton";
+        analyzeButton.Size = new Size(88, 27);
+        analyzeButton.TabIndex = 16;
+        analyzeButton.Text = "MusicBrainz";
+        analyzeButton.UseVisualStyleBackColor = true;
+        analyzeButton.Click += analyzeButton_Click;
+        // 
+        // cancelButton
+        // 
+        cancelButton.Anchor = AnchorStyles.Top | AnchorStyles.Right;
+        cancelButton.Location = new Point(1202, 29);
+        cancelButton.Margin = new Padding(4, 3, 4, 3);
+        cancelButton.Name = "cancelButton";
+        cancelButton.Size = new Size(88, 27);
+        cancelButton.TabIndex = 17;
+        cancelButton.Text = "Cancel";
+        cancelButton.UseVisualStyleBackColor = true;
+        cancelButton.Click += cancelButton_Click;
+        // 
         // frmMaster
         // 
         AutoScaleDimensions = new SizeF(7F, 15F);
         AutoScaleMode = AutoScaleMode.Font;
         ClientSize = new Size(1304, 452);
+        Controls.Add(cancelButton);
+        Controls.Add(analyzeButton);
         Controls.Add(includeSubFoldersCheckBox);
         Controls.Add(cmdBrowseMusicLibraryFolder);
         Controls.Add(cmdShowUnclear);
@@ -249,4 +277,6 @@ public partial class frmMaster
     internal System.Windows.Forms.Label labFilter;
     internal System.Windows.Forms.Button cmdShowUnclear;
     private CheckBox includeSubFoldersCheckBox;
+    internal Button analyzeButton;
+    internal Button cancelButton;
 }

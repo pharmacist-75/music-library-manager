@@ -1,20 +1,24 @@
 ﻿using MusicLibraryManager.Models;
+using MusicLibraryManager.Models.MusicBrainz;
 using MusicLibraryManager.Services;
 using System;
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Text;
 using System.Text.Json;
+using System.Threading;
 using System.Windows.Forms;
 using static PublicFunctions;
 
 public partial class frmMaster : Form
 {
-    private string _action;
+    private string _action ;
     private MusicLibrarySettings _settings = new();
     private readonly ContextMenuStrip _columnMenu = new();
+    private CancellationTokenSource? _musicBrainzCancellation;
 
     private void InitializeColumnMenu()
     {
@@ -407,5 +411,148 @@ public partial class frmMaster : Form
     {
         _settings.IncludeSubfolders = ((CheckBox)sender).Checked;
         SaveSettings();
+    }
+
+    private void cancelButton_Click(object sender, EventArgs e)
+    {
+        _musicBrainzCancellation?.Cancel();
+    }
+
+    private static LocalMusicTrack? CreateLocalTrack(string filePath)
+    {
+        string fileName = Path.GetFileNameWithoutExtension(filePath);
+        int separator = fileName.IndexOf(" - ", StringComparison.Ordinal);
+
+        if (separator <= 0 || separator + 3 >= fileName.Length)
+        {
+            return null;
+        }
+
+        MusicMetadata metadata = MusicMetadataService.LoadMetadata(filePath);
+
+        string artist = fileName[..separator].Trim();
+        string title = fileName[(separator + 3)..].Trim();
+
+        (string cleanTitle, string? versionInfo, bool isLiveVersion) = MusicTitleParser.Parse(title);
+
+        return new LocalMusicTrack
+        {
+            FilePath = filePath,
+            Artist = artist,
+            Title = cleanTitle,
+            VersionInfo = versionInfo,
+            IsLiveVersion = isLiveVersion,
+            LengthMilliseconds = metadata.LengthMilliseconds,
+        };
+    }
+
+    private async void analyzeButton_Click(object sender, EventArgs e)
+    {
+        if (_musicBrainzCancellation is not null)
+        {
+            return;
+        }
+
+        try
+        {
+            string? fileName = dgvSongs.CurrentRow?.Cells["Filename"].Value?.ToString();
+            string selectedArtist = fileName?.Split(" - ", 2, StringSplitOptions.None)[0].Trim() ?? "";
+
+            if (string.IsNullOrWhiteSpace(fileName) || !fileName.Contains(" - "))
+            {
+                MessageBox.Show("Select a song with the filename format Artist - Title.mp3.");
+                return;
+            }
+
+            SearchOption searchOption = includeSubFoldersCheckBox.Checked ? SearchOption.AllDirectories : SearchOption.TopDirectoryOnly;
+
+            List<LocalMusicTrack> tracks = Directory
+                .EnumerateFiles(txtMusicLibraryFolder.Text, "*.mp3", searchOption)
+                .Select(CreateLocalTrack)
+                .OfType<LocalMusicTrack>()
+                .Where(track => string.Equals(track.Artist, selectedArtist, StringComparison.OrdinalIgnoreCase))
+                .ToList();
+
+            if (tracks.Count == 0)
+            {
+                MessageBox.Show("No matching MP3 files found.");
+                return;
+            }
+
+            using CancellationTokenSource cancellation = new();
+            _musicBrainzCancellation = cancellation;
+
+            labStatus.Visible = true;
+            Progress<string> progress = new(message => labStatus.Text = message);
+
+            using MusicBrainzService musicBrainz = new();
+            MusicBrainzCacheService cache = new();
+            MusicBrainzLibraryAnalyzer analyzer = new(musicBrainz, cache);
+
+            BulkMatchResult result = await analyzer.AnalyzeAsync(selectedArtist, tracks, progress, cancellation.Token);
+
+            ShowMusicBrainzPreview(result, tracks.Count);
+        }
+        catch (OperationCanceledException)
+        {
+            MessageBox.Show("MusicBrainz analysis canceled.");
+        }
+        catch (Exception exception)
+        {
+            MessageBox.Show(exception.Message, "MusicBrainz error");
+        }
+        finally
+        {
+            _musicBrainzCancellation = null;
+            labStatus.Visible = false;
+        }
+    }
+
+    private void ShowMusicBrainzPreview(BulkMatchResult result, int totalFiles)
+    {
+        Form preview = new()
+        {
+            Text = result.IsComplete
+                                    ? $"MusicBrainz - {totalFiles} files analyzed"
+                                    : $"MusicBrainz - Partial analysis ({result.UnprocessedAlbumGroups.Count} albums remaining)",
+            Width = 1050,
+            Height = 600,
+            StartPosition = FormStartPosition.CenterParent
+        };
+
+        DataGridView grid = new()
+        {
+            Dock = DockStyle.Fill,
+            ReadOnly = true,
+            AllowUserToAddRows = false,
+            AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill
+        };
+
+        grid.Columns.Add("File", "File");
+        grid.Columns.Add("Album", "Album candidate");
+        grid.Columns.Add("Track", "Track");
+        grid.Columns.Add("Status", "Status");
+
+        HashSet<string> ambiguous = result.AmbiguousFiles.ToHashSet(StringComparer.OrdinalIgnoreCase);
+
+        foreach (ReleaseMatchResult release in result.Releases)
+        {
+            foreach (TrackMatch match in release.Matches)
+            {
+                string matchStatus = ambiguous.Contains(match.FilePath) ? "Multiple candidates" : "Candidate";
+                grid.Rows.Add(Path.GetFileName(match.FilePath), release.Album, match.TrackNumber, matchStatus);
+            }
+        }
+
+        string unmatchedStatus = result.IsComplete ? "No studio album match" : "Not matched (analysis incomplete)";
+
+        foreach (string filePath in result.UnmatchedFiles)
+        {
+            grid.Rows.Add(Path.GetFileName(filePath), "", "", unmatchedStatus);
+        }
+
+        preview.Controls.Add(grid);
+        preview.ShowDialog(this);
+        preview.Dispose();
     }
 }

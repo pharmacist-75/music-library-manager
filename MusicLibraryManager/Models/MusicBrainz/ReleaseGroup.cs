@@ -4,7 +4,6 @@ using System.Text.Json.Serialization;
 namespace MusicLibraryManager.Models.MusicBrainz;
 
 #nullable enable
-
 public sealed class ReleaseGroup
 {
     [JsonPropertyName("id")]
@@ -18,4 +17,7 @@ public sealed class ReleaseGroup
 
     [JsonPropertyName("secondary-types")]
     public List<string> SecondaryTypes { get; set; } = [];
+
+    [JsonPropertyName("first-release-date")]
+    public string? FirstReleaseDate { get; set; }
 }

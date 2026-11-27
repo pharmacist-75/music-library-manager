@@ -58,6 +58,13 @@ internal sealed class MusicBrainzService : IDisposable
         return await GetMusicBrainzAsync<ReleaseBrowseResult>(url, cancellationToken);
     }
 
+    public async Task<ReleaseGroup> GetReleaseGroupAsync(string releaseGroupId, CancellationToken cancellationToken = default)
+    {
+        string url = $"https://musicbrainz.org/ws/2/release-group/{Uri.EscapeDataString(releaseGroupId)}?fmt=json";
+
+        return await GetMusicBrainzAsync<ReleaseGroup>(url, cancellationToken);
+    }
+
     private async Task<T> GetMusicBrainzAsync<T>(string url, CancellationToken cancellationToken) where T : class
     {
         await _rateLimiter.WaitAsync(cancellationToken);
